@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class NodeRenderer extends ConsumerStatefulWidget {
-  const NodeRenderer({super.key});
+  const NodeRenderer({
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _NodeRendererState();

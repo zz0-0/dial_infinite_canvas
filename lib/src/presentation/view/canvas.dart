@@ -13,6 +13,7 @@ class Canvas extends ConsumerStatefulWidget {
     this.gridSize = const Size.square(50),
     this.backgroundBuilder,
   });
+
   final Size gridSize;
   final Widget Function(BuildContext, Rect)? backgroundBuilder;
 
@@ -36,10 +37,10 @@ class _CanvasState extends ConsumerState<Canvas> {
                   children: [
                     Background(),
                     Menu(),
-                    GroupRenderer(),
-                    CardRenderer(),
-                    EdgeRenderer(),
-                    NodeRenderer(),
+                    // GroupRenderer(),
+                    // CardRenderer(),
+                    // EdgeRenderer(),
+                    // NodeRenderer(),
                   ],
                 ),
               );
