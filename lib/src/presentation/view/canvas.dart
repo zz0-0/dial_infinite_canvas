@@ -28,11 +28,13 @@ class _CanvasState extends ConsumerState<Canvas> {
       child: LayoutBuilder(
         builder: (context, constraints) {
           return InteractiveViewer.builder(
-            boundaryMargin: const EdgeInsets.all(20),
+            alignment: Alignment.center,
+            boundaryMargin: const EdgeInsets.all(double.infinity),
             onInteractionStart: (details) {},
             onInteractionUpdate: (details) {},
             builder: (context, quad) {
               return SizedBox.fromSize(
+                size: Size.square(500),
                 child: const Stack(
                   children: [
                     Background(),
