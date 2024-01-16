@@ -10,12 +10,12 @@ import 'package:aimed_infinite_canvas/src/presentation/widget/group_renderer.dar
 class Canvas extends ConsumerStatefulWidget {
   const Canvas({
     super.key,
-    this.gridSize = const Size.square(50),
-    this.backgroundBuilder,
+    // this.gridSize = const Size.square(50),
+    // this.backgroundBuilder,
   });
 
-  final Size gridSize;
-  final Widget Function(BuildContext, Rect)? backgroundBuilder;
+  // final Size gridSize;
+  // final Widget Function(BuildContext, Rect)? backgroundBuilder;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CanvasState();
@@ -36,7 +36,7 @@ class _CanvasState extends ConsumerState<Canvas> {
                 child: const Stack(
                   children: [
                     Background(),
-                    Menu(),
+                    // Menu(),
                     // GroupRenderer(),
                     // CardRenderer(),
                     // EdgeRenderer(),
