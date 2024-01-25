@@ -12,7 +12,12 @@ class InfiniteCanvas extends ConsumerStatefulWidget {
 }
 
 class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
-  ValueNotifier<double> _valueNotifier = ValueNotifier<double>(0);
+  final ValueNotifier<double> _valueNotifier = ValueNotifier<double>(0);
+  final bool _accept = false;
+  final GlobalKey _key = GlobalKey();
+  double top = 200;
+  double left = 200;
+  double xOff = 0, yOff = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -31,26 +36,24 @@ class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
                 child: Stack(
                   children: [
                     const Background(),
-                    const Draggable(
-                      feedback: Card(
-                        child: Text("data1"),
-                      ),
-                      child: Card(
-                        child: Text("data"),
-                      ),
-                    ),
-                    DragTarget(
-                      builder: (BuildContext context, List<dynamic> accepted,
-                          List<dynamic> rejected) {
-                        return const Card(
-                          child: Text("data"),
-                        );
-                      },
-                      onWillAccept: (data) {
-                        return data == 'red';
-                      },
-                      onAccept: (data) {},
-                    ),
+                    Positioned(
+                        key: _key,
+                        top: top,
+                        left: left,
+                        child: Draggable(
+                          feedback: const Card(
+                            child: Text("456"),
+                          ),
+                          onDragEnd: (details) {
+                            setState(() {
+                              top = details.offset.dy;
+                              left = details.offset.dx;
+                            });
+                          },
+                          child: const Card(
+                            child: Text("123"),
+                          ),
+                        ))
                   ],
                 ),
               ),
