@@ -11,72 +11,86 @@ class InfiniteCanvas extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _InfiniteCanvasState();
 }
 
+double cx = 1000.0;
+double cy = 1000.0;
+
 class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
-  final ValueNotifier<double> _valueNotifier = ValueNotifier<double>(0);
-  final bool _accept = false;
+  final controller =
+      TransformationController(Matrix4.translationValues(-cx, -cy, 0.0));
+
   final GlobalKey _key = GlobalKey();
-  double top = 200;
-  double left = 200;
-  double xOff = 0, yOff = 0;
+  double cardtop = 50;
+  double cardleft = 50;
 
   @override
   Widget build(BuildContext context) {
     return Listener(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          return InteractiveViewer(
-            boundaryMargin: const EdgeInsets.all(double.infinity),
-            onInteractionStart: (details) {},
-            onInteractionUpdate: (details) {},
-            onInteractionEnd: (details) {},
-            clipBehavior: Clip.none,
-            child: CustomPaint(
-              painter: BackgroundPainter(valueNotifier: _valueNotifier),
-              child: SizedBox.expand(
-                child: Stack(
-                  children: [
-                    const Background(),
-                    Positioned(
+          return Stack(
+            children: [
+              InteractiveViewer(
+                // transformationController: controller,
+                boundaryMargin: const EdgeInsets.all(0),
+                onInteractionStart: (details) {},
+                onInteractionUpdate: (details) {},
+                onInteractionEnd: (details) {},
+                clipBehavior: Clip.none,
+                constrained: false,
+                child: SizedBox(
+                  width: 2 * cx,
+                  height: 2 * cy,
+                  child: Stack(
+                    children: [
+                      const Background(),
+                      Positioned(
                         key: _key,
-                        top: top,
-                        left: left,
+                        top: cardtop,
+                        left: cardleft,
                         child: Draggable(
                           feedback: const Card(
-                            child: Text("456"),
+                            child: SizedBox(
+                              width: 100,
+                              height: 100,
+                              child: Text("456"),
+                            ),
                           ),
                           onDragEnd: (details) {
                             setState(() {
-                              top = details.offset.dy;
-                              left = details.offset.dx;
+                              cardtop = details.offset.dy;
+                              cardleft = details.offset.dx;
                             });
                           },
                           child: const Card(
-                            child: Text("123"),
+                            child: SizedBox(
+                              width: 100,
+                              height: 100,
+                              child: Text("123"),
+                            ),
                           ),
-                        ))
-                  ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
+              ListenableBuilder(
+                listenable: controller,
+                builder: (context, child) {
+                  final viewport = Offset.zero & constraints.biggest;
+                  final r = Rect.fromPoints(
+                          controller.toScene(viewport.topLeft),
+                          controller.toScene(viewport.bottomRight))
+                      .translate(-cx, -cy);
+                  return Text(
+                    '${r.topLeft}\n${r.size}\ntop:$cardtop,left:$cardleft',
+                  );
+                },
+              ),
+            ],
           );
         },
       ),
     );
   }
-}
-
-class BackgroundPainter extends CustomPainter {
-  ValueNotifier<double> valueNotifier;
-
-  BackgroundPainter({required this.valueNotifier})
-      : super(repaint: valueNotifier) {}
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..style = PaintingStyle.fill;
-    canvas.drawPaint(paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
