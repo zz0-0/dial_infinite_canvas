@@ -13,12 +13,12 @@ class Background extends ConsumerStatefulWidget {
 class _BackgroundState extends ConsumerState<Background> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 200,
-      height: 200,
-      child: const GridPaper(
-        divisions: 2,
-        subdivisions: 2,
+    return GridPaper(
+      divisions: 2,
+      subdivisions: 2,
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
       ),
     );
   }
