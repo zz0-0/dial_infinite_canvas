@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum Point { start, end }
-
 class DetailCardWidget extends ConsumerStatefulWidget {
   Function callback;
-  // Point point;
 
   DetailCardWidget({
     super.key,
     required this.callback,
-    // required this.point,
   });
-
-  // get offsetGetter => null;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -21,9 +15,6 @@ class DetailCardWidget extends ConsumerStatefulWidget {
 }
 
 class _DetailCardWidgetState extends ConsumerState<DetailCardWidget> {
-  // final ValueGetter<Offset> offsetGetter = (value) {};
-  // late ValueGetter<Offset> offsetGetter;
-
   @override
   Widget build(BuildContext context) {
     return Container(

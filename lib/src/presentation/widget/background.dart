@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Background extends ConsumerStatefulWidget {
-  const Background({
-    super.key,
-  });
+class Background extends ConsumerWidget {
+  Background({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _BackgroundState();
-}
-
-class _BackgroundState extends ConsumerState<Background> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GridPaper(
       divisions: 2,
       subdivisions: 2,
