@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aimed_infinite_canvas/src/presentation/widget/menu.dart';
@@ -7,6 +8,8 @@ import 'package:aimed_infinite_canvas/src/presentation/widget/detail_card_widget
 Offset start = Offset.infinite;
 Offset end = Offset.infinite;
 var positions = <(Offset, Offset)>[];
+var detailCardWidgets = <LayoutId>[];
+Map<GlobalKey, Offset> cardPositions = HashMap();
 
 class InfiniteCanvas extends ConsumerStatefulWidget {
   const InfiniteCanvas({super.key});
@@ -20,7 +23,6 @@ class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
   double cy = 1000.0;
 
   bool notSetStartPosition = true;
-  var detailCardWidgets = <LayoutId>[];
 
   checkCallbackStatus(pos) {
     if (notSetStartPosition) {
@@ -44,6 +46,12 @@ class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
     });
   }
 
+  setDragEnd(GlobalKey key, Offset offset) {
+    setState(() {
+      cardPositions[key] = offset;
+    });
+  }
+
   createDetailCardWidget() {
     final GlobalKey key = GlobalKey();
     var positionWidget = LayoutId(
@@ -51,19 +59,7 @@ class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
       child: Draggable(
         feedback: DetailCardWidget(callback: checkCallbackStatus),
         onDragEnd: (details) {
-          setState(
-            () {
-              // var renderBox =
-              //     key.currentContext?.findRenderObject() as RenderBox;
-              // var position = renderBox.localToGlobal(Offset.zero);
-              // print(position);
-              // if (notSetStartPosition) {
-              //   start = position;
-              // } else {
-              //   end = position;
-              // }
-            },
-          );
+          setDragEnd(key, details.offset);
         },
         child: DetailCardWidget(callback: checkCallbackStatus),
       ),
@@ -72,6 +68,7 @@ class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
     setState(
       () {
         detailCardWidgets.add(positionWidget);
+        cardPositions[key] = Offset.infinite;
       },
     );
   }
@@ -97,7 +94,7 @@ class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
                     children: [
                       const Background(),
                       CustomMultiChildLayout(
-                        delegate: DetailCardWidgetsDelegate(detailCardWidgets),
+                        delegate: DetailCardWidgetsDelegate(),
                         children: [
                           ...detailCardWidgets,
                         ],
@@ -138,7 +135,6 @@ class EdgePainter extends CustomPainter {
           canvas.drawLine(i.$1, i.$2, paint);
         }
       }
-      print("1");
     }
 
     if (pos1 != Offset.infinite && pos2 != Offset.infinite) {
@@ -154,30 +150,26 @@ class EdgePainter extends CustomPainter {
 }
 
 class DetailCardWidgetsDelegate extends MultiChildLayoutDelegate {
-  late List<GlobalKey> layoutIds;
-
-  DetailCardWidgetsDelegate(List<LayoutId> list) {
-    layoutIds = getLayoutId(list);
-  }
-
   Offset childPosition = Offset.zero;
 
   @override
   void performLayout(Size size) {
-    for (GlobalKey id in layoutIds) {
+    for (var id in cardPositions.keys) {
       if (hasChild(id)) {
         final Size currentSize = layoutChild(
             id, BoxConstraints(maxWidth: size.width, maxHeight: size.height));
-        positionChild(id, childPosition);
-        childPosition += Offset(0, currentSize.height + 5);
+        if (cardPositions[id] != Offset.infinite) {
+          positionChild(id, cardPositions[id]!);
+        } else {
+          positionChild(id, childPosition);
+          childPosition += Offset(0, currentSize.height + 5);
+        }
       }
     }
   }
 
   @override
-  bool shouldRelayout(covariant MultiChildLayoutDelegate oldDelegate) => false;
-
-  List<GlobalKey> getLayoutId(List<LayoutId> list) {
-    return list.map((e) => e.id as GlobalKey).toList();
+  bool shouldRelayout(covariant MultiChildLayoutDelegate oldDelegate) {
+    return true;
   }
 }
