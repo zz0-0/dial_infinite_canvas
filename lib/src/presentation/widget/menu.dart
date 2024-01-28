@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:aimed_infinite_canvas/src/presentation/widget/detail_card_widget.dart';
 
 class Menu extends ConsumerStatefulWidget {
-  Function callback;
-  Menu({
+  final Function callback;
+  const Menu({
     super.key,
     required this.callback,
   });
@@ -16,7 +15,7 @@ class Menu extends ConsumerStatefulWidget {
 class _MenuState extends ConsumerState<Menu> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 100,
       width: 100,
       child: Column(children: [
@@ -24,7 +23,7 @@ class _MenuState extends ConsumerState<Menu> {
           onPressed: () {
             widget.callback();
           },
-          icon: Icon(Icons.add_box_outlined),
+          icon: const Icon(Icons.add_box_outlined),
         ),
       ]),
     );

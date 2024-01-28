@@ -4,10 +4,11 @@ import 'package:aimed_infinite_canvas/src/presentation/widget/menu.dart';
 import 'package:aimed_infinite_canvas/src/presentation/widget/background.dart';
 import 'package:aimed_infinite_canvas/src/presentation/widget/detail_card_widget.dart';
 
+Offset start = Offset.infinite;
+Offset end = Offset.infinite;
+
 class InfiniteCanvas extends ConsumerStatefulWidget {
-  const InfiniteCanvas({
-    super.key,
-  });
+  const InfiniteCanvas({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _InfiniteCanvasState();
@@ -16,56 +17,62 @@ class InfiniteCanvas extends ConsumerStatefulWidget {
 class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
   double cx = 1000.0;
   double cy = 1000.0;
-  late Offset pos1 = Offset.infinite;
-  late Offset pos2 = Offset.infinite;
 
-  var detailCardWidgets = <Positioned>[];
+  bool notSetStartPosition = true;
+  var detailCardWidgets = <LayoutId>[];
 
-  double cardtop = 50;
-  double cardleft = 50;
+  checkCallbackStatus(pos) {
+    if (notSetStartPosition) {
+      setEdgeStartPositionCallback(pos);
+    } else {
+      setEdgeEndPositionCallback(pos);
+    }
+  }
 
   setEdgeStartPositionCallback(pos) {
     setState(() {
-      pos1 = pos;
+      start = pos;
+      notSetStartPosition = false;
     });
   }
 
   setEdgeEndPositionCallback(pos) {
     setState(() {
-      pos2 = pos;
+      end = pos;
+      notSetStartPosition = true;
     });
   }
 
-  void createDetailCardWidget() {
-    final GlobalKey _key = GlobalKey();
-
-    setState(() {
-      detailCardWidgets.add(
-        Positioned(
-          key: _key,
-          top: cardtop,
-          left: cardleft,
-          child: Draggable(
-            feedback: DetailCardWidget(
-              callback: setEdgeStartPositionCallback,
-            ),
-            onDragEnd: (details) {
-              setState(
-                () {
-                  pos1 = pos1.translate(details.offset.dx - cardleft,
-                      details.offset.dy - cardtop);
-                  cardtop = details.offset.dy;
-                  cardleft = details.offset.dx;
-                },
-              );
+  createDetailCardWidget() {
+    final GlobalKey key = GlobalKey();
+    var positionWidget = LayoutId(
+      id: key,
+      child: Draggable(
+        feedback: DetailCardWidget(callback: checkCallbackStatus),
+        onDragEnd: (details) {
+          setState(
+            () {
+              // var renderBox =
+              //     key.currentContext?.findRenderObject() as RenderBox;
+              // var position = renderBox.localToGlobal(Offset.zero);
+              // print(position);
+              // if (notSetStartPosition) {
+              //   start = position;
+              // } else {
+              //   end = position;
+              // }
             },
-            child: DetailCardWidget(
-              callback: setEdgeStartPositionCallback,
-            ),
-          ),
-        ),
-      );
-    });
+          );
+        },
+        child: DetailCardWidget(callback: checkCallbackStatus),
+      ),
+    );
+
+    setState(
+      () {
+        detailCardWidgets.add(positionWidget);
+      },
+    );
   }
 
   @override
@@ -88,7 +95,12 @@ class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
                   child: Stack(
                     children: [
                       Background(),
-                      ...detailCardWidgets,
+                      CustomMultiChildLayout(
+                        delegate: DetailCardWidgetsDelegate(detailCardWidgets),
+                        children: [
+                          ...detailCardWidgets,
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -100,13 +112,9 @@ class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
                   callback: createDetailCardWidget,
                 ),
               ),
-              // CustomPaint(
-              //   painter: EdgePainter(
-              //     pos1: pos1,
-              //     pos2: pos2,
-              //     // notifier: notifier,
-              //   ),
-              // )
+              CustomPaint(
+                painter: EdgePainter(pos1: start, pos2: end),
+              ),
             ],
           );
         },
@@ -122,10 +130,43 @@ class EdgePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.blue;
-    canvas.drawLine(pos1, pos2, paint);
+    if (pos1 != Offset.infinite && pos1 != Offset.infinite) {
+      final paint = Paint()..color = Colors.blue;
+      canvas.drawLine(pos1, pos2, paint);
+      start = Offset.infinite;
+      end = Offset.infinite;
+    }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class DetailCardWidgetsDelegate extends MultiChildLayoutDelegate {
+  late List<GlobalKey> layoutIds;
+
+  DetailCardWidgetsDelegate(List<LayoutId> list) {
+    layoutIds = getLayoutId(list);
+  }
+
+  Offset childPosition = Offset.zero;
+
+  @override
+  void performLayout(Size size) {
+    for (GlobalKey id in layoutIds) {
+      if (hasChild(id)) {
+        final Size currentSize = layoutChild(
+            id, BoxConstraints(maxWidth: size.width, maxHeight: size.height));
+        positionChild(id, childPosition);
+        childPosition += Offset(0, currentSize.height + 5);
+      }
+    }
+  }
+
+  @override
+  bool shouldRelayout(covariant MultiChildLayoutDelegate oldDelegate) => false;
+
+  List<GlobalKey> getLayoutId(List<LayoutId> list) {
+    return list.map((e) => e.id as GlobalKey).toList();
+  }
 }

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DetailCardWidget extends ConsumerStatefulWidget {
-  Function callback;
+  final Function callback;
 
-  DetailCardWidget({
+  const DetailCardWidget({
     super.key,
     required this.callback,
   });
@@ -17,13 +17,13 @@ class DetailCardWidget extends ConsumerStatefulWidget {
 class _DetailCardWidgetState extends ConsumerState<DetailCardWidget> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 200,
       width: 200,
       child: Card(
         child: Column(
           children: [
-            ListTile(
+            const ListTile(
               title: Text("Title"),
               subtitle: Text("SubTitle"),
             ),
@@ -34,7 +34,7 @@ class _DetailCardWidgetState extends ConsumerState<DetailCardWidget> {
               child: Container(
                 width: 50,
                 height: 50,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
                 ),
