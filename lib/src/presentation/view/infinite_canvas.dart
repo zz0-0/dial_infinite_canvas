@@ -6,6 +6,7 @@ import 'package:aimed_infinite_canvas/src/presentation/widget/detail_card_widget
 
 Offset start = Offset.infinite;
 Offset end = Offset.infinite;
+var positions = <(Offset, Offset)>[];
 
 class InfiniteCanvas extends ConsumerStatefulWidget {
   const InfiniteCanvas({super.key});
@@ -94,12 +95,15 @@ class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
                   height: 2 * cy,
                   child: Stack(
                     children: [
-                      Background(),
+                      const Background(),
                       CustomMultiChildLayout(
                         delegate: DetailCardWidgetsDelegate(detailCardWidgets),
                         children: [
                           ...detailCardWidgets,
                         ],
+                      ),
+                      CustomPaint(
+                        painter: EdgePainter(pos1: start, pos2: end),
                       ),
                     ],
                   ),
@@ -111,9 +115,6 @@ class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
                 child: Menu(
                   callback: createDetailCardWidget,
                 ),
-              ),
-              CustomPaint(
-                painter: EdgePainter(pos1: start, pos2: end),
               ),
             ],
           );
@@ -130,9 +131,19 @@ class EdgePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (pos1 != Offset.infinite && pos1 != Offset.infinite) {
-      final paint = Paint()..color = Colors.blue;
+    final paint = Paint()..color = Colors.blue;
+    if (positions.isNotEmpty) {
+      for (var i in positions) {
+        if (i.$1 != Offset.infinite && i.$2 != Offset.infinite) {
+          canvas.drawLine(i.$1, i.$2, paint);
+        }
+      }
+      print("1");
+    }
+
+    if (pos1 != Offset.infinite && pos2 != Offset.infinite) {
       canvas.drawLine(pos1, pos2, paint);
+      positions.add((pos1, pos2));
       start = Offset.infinite;
       end = Offset.infinite;
     }
