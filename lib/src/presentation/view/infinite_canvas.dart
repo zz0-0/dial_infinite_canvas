@@ -55,15 +55,12 @@ class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
   createDetailCardWidget() {
     final GlobalKey key = GlobalKey();
     var positionWidget = LayoutId(
-      id: key,
-      child: Draggable(
-        feedback: DetailCardWidget(cardKey: key, callback: checkCallbackStatus),
-        onDragEnd: (details) {
-          setDragEnd(key, details.offset);
-        },
-        child: DetailCardWidget(cardKey: key, callback: checkCallbackStatus),
-      ),
-    );
+        id: key,
+        child: DetailCardWidget(
+          cardKey: key,
+          dragCallback: setDragEnd,
+          tapCallback: checkCallbackStatus,
+        ));
 
     setState(
       () {
