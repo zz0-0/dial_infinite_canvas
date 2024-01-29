@@ -19,18 +19,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// ListenableBuilder(
-//   listenable: controller,
-//   builder: (context, child) {
-//     final viewport = Offset.zero & constraints.biggest;
-//     final r = Rect.fromPoints(
-//             controller.toScene(viewport.topLeft),
-//             controller.toScene(viewport.bottomRight))
-//         .translate(-cx, -cy);
-
-//     return Text(
-//       '${r.topLeft}\n${r.size}\ntop:$cardtop,left:$cardleft',
-//     );
-//   },
-// ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DetailCardWidget extends ConsumerStatefulWidget {
+class DetailCardWidget extends ConsumerWidget {
   final GlobalKey cardKey;
   final Function dragCallback;
   final Function tapCallback;
@@ -14,19 +14,13 @@ class DetailCardWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _DetailCardWidgetState();
-}
-
-class _DetailCardWidgetState extends ConsumerState<DetailCardWidget> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Stack(
       children: [
         Draggable(
           feedback: Container(),
           onDragEnd: (details) {
-            widget.dragCallback(widget.cardKey, details.offset);
+            dragCallback(cardKey, details.offset);
           },
           child: const SizedBox(
             height: 200,
@@ -49,7 +43,7 @@ class _DetailCardWidgetState extends ConsumerState<DetailCardWidget> {
         ),
         GestureDetector(
           onTapDown: (details) {
-            widget.tapCallback(widget.cardKey);
+            tapCallback(cardKey);
           },
           child: Container(
             width: 50,
