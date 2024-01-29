@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DetailCardWidget extends ConsumerStatefulWidget {
+  final GlobalKey cardKey;
   final Function callback;
 
   const DetailCardWidget({
     super.key,
+    required this.cardKey,
     required this.callback,
   });
 
@@ -29,7 +31,7 @@ class _DetailCardWidgetState extends ConsumerState<DetailCardWidget> {
             ),
             GestureDetector(
               onTapDown: (details) {
-                widget.callback(details.globalPosition);
+                widget.callback(widget.cardKey);
               },
               child: Container(
                 width: 50,

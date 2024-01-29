@@ -5,9 +5,9 @@ import 'package:aimed_infinite_canvas/src/presentation/widget/menu.dart';
 import 'package:aimed_infinite_canvas/src/presentation/widget/background.dart';
 import 'package:aimed_infinite_canvas/src/presentation/widget/detail_card_widget.dart';
 
-Offset start = Offset.infinite;
-Offset end = Offset.infinite;
-var positions = <(Offset, Offset)>[];
+GlobalKey? start;
+GlobalKey? end;
+var nodes = <(GlobalKey, GlobalKey)>[];
 var detailCardWidgets = <LayoutId>[];
 Map<GlobalKey, Offset> cardPositions = HashMap();
 
@@ -22,27 +22,27 @@ class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
   double cx = 1000.0;
   double cy = 1000.0;
 
-  bool notSetStartPosition = true;
+  bool notSetStartKey = true;
 
-  checkCallbackStatus(pos) {
-    if (notSetStartPosition) {
-      setEdgeStartPositionCallback(pos);
+  checkCallbackStatus(key) {
+    if (notSetStartKey) {
+      setEdgeStartKeyCallback(key);
     } else {
-      setEdgeEndPositionCallback(pos);
+      setEdgeEndKeyCallback(key);
     }
   }
 
-  setEdgeStartPositionCallback(pos) {
+  setEdgeStartKeyCallback(key) {
     setState(() {
-      start = pos;
-      notSetStartPosition = false;
+      start = key;
+      notSetStartKey = false;
     });
   }
 
-  setEdgeEndPositionCallback(pos) {
+  setEdgeEndKeyCallback(key) {
     setState(() {
-      end = pos;
-      notSetStartPosition = true;
+      end = key;
+      notSetStartKey = true;
     });
   }
 
@@ -57,11 +57,11 @@ class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
     var positionWidget = LayoutId(
       id: key,
       child: Draggable(
-        feedback: DetailCardWidget(callback: checkCallbackStatus),
+        feedback: DetailCardWidget(cardKey: key, callback: checkCallbackStatus),
         onDragEnd: (details) {
           setDragEnd(key, details.offset);
         },
-        child: DetailCardWidget(callback: checkCallbackStatus),
+        child: DetailCardWidget(cardKey: key, callback: checkCallbackStatus),
       ),
     );
 
@@ -100,7 +100,7 @@ class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
                         ],
                       ),
                       CustomPaint(
-                        painter: EdgePainter(pos1: start, pos2: end),
+                        painter: EdgePainter(key1: start, key2: end),
                       ),
                     ],
                   ),
@@ -122,26 +122,30 @@ class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
 }
 
 class EdgePainter extends CustomPainter {
-  Offset pos1, pos2;
+  GlobalKey? key1, key2;
 
-  EdgePainter({required this.pos1, required this.pos2});
+  EdgePainter({required this.key1, required this.key2});
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = Colors.blue;
-    if (positions.isNotEmpty) {
-      for (var i in positions) {
-        if (i.$1 != Offset.infinite && i.$2 != Offset.infinite) {
-          canvas.drawLine(i.$1, i.$2, paint);
+    if (nodes.isNotEmpty) {
+      for (var i in nodes) {
+        if (cardPositions[i.$1] != Offset.infinite &&
+            cardPositions[i.$2] != Offset.infinite) {
+          canvas.drawLine(cardPositions[i.$1]!, cardPositions[i.$2]!, paint);
         }
       }
     }
 
-    if (pos1 != Offset.infinite && pos2 != Offset.infinite) {
-      canvas.drawLine(pos1, pos2, paint);
-      positions.add((pos1, pos2));
-      start = Offset.infinite;
-      end = Offset.infinite;
+    if (key1 != null && key2 != null) {
+      if (cardPositions[key1] != Offset.infinite &&
+          cardPositions[key2] != Offset.infinite) {
+        canvas.drawLine(cardPositions[key1]!, cardPositions[key2]!, paint);
+        nodes.add((key1!, key2!));
+        start = null;
+        end = null;
+      }
     }
   }
 
@@ -154,14 +158,14 @@ class DetailCardWidgetsDelegate extends MultiChildLayoutDelegate {
 
   @override
   void performLayout(Size size) {
-    for (var id in cardPositions.keys) {
-      if (hasChild(id)) {
+    for (var key in cardPositions.keys) {
+      if (hasChild(key)) {
         final Size currentSize = layoutChild(
-            id, BoxConstraints(maxWidth: size.width, maxHeight: size.height));
-        if (cardPositions[id] != Offset.infinite) {
-          positionChild(id, cardPositions[id]!);
+            key, BoxConstraints(maxWidth: size.width, maxHeight: size.height));
+        if (cardPositions[key] != Offset.infinite) {
+          positionChild(key, cardPositions[key]!);
         } else {
-          positionChild(id, childPosition);
+          positionChild(key, childPosition);
           childPosition += Offset(0, currentSize.height + 5);
         }
       }
