@@ -3,18 +3,31 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aimed_infinite_canvas/src/provider.dart';
 import 'package:aimed_infinite_canvas/src/presentation/widget/background.dart';
 
-class InteractiveCanvasWidget extends StatefulWidget {
+var newCardPositions = {};
+
+class InteractiveCanvasWidget extends ConsumerStatefulWidget {
   const InteractiveCanvasWidget({super.key});
 
   @override
-  State<StatefulWidget> createState() => _InteractiveCanvasWidgetState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _InteractiveCanvasWidgetState();
 }
 
-class _InteractiveCanvasWidgetState extends State<InteractiveCanvasWidget> {
+class _InteractiveCanvasWidgetState
+    extends ConsumerState<InteractiveCanvasWidget> {
+  // executeAfterBuild(WidgetRef ref) {
+  //   print(newCardPositions);
+  //   ref.read(cardPositionMapProvider.notifier).update((state) {
+  //     state = Map.from(newCardPositions);
+  //     return state;
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
     double cx = 1000.0;
     double cy = 1000.0;
+    // Future.delayed(Duration.zero, () => executeAfterBuild(ref));
 
     return InteractiveViewer(
       boundaryMargin: const EdgeInsets.all(0),
@@ -90,8 +103,6 @@ class EdgePainter extends CustomPainter {
       }
     }
 
-    // print("in: $start");
-    // print(end);
     if (start != null && end != null) {
       if (cardPositions[start] != Offset.infinite &&
           cardPositions[end] != Offset.infinite) {
@@ -127,15 +138,10 @@ class DetailCardWidgetsDelegate extends MultiChildLayoutDelegate {
             key, BoxConstraints(maxWidth: size.width, maxHeight: size.height));
         if (cardPositions[key] != Offset.infinite) {
           positionChild(key, cardPositions[key]!);
+          newCardPositions[key] = cardPositions[key]!;
         } else {
-          var positions = ref.read(cardPositionMapProvider);
-          positions[key] = childPosition;
-
-          ref.read(cardPositionMapProvider.notifier).update((state) {
-            state = Map.from(positions);
-            return state;
-          });
           positionChild(key, childPosition);
+          newCardPositions[key] = childPosition;
           childPosition += Offset(0, currentSize.height + 5);
         }
       }
