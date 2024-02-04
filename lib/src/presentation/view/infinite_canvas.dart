@@ -12,7 +12,6 @@ class InfiniteCanvas extends ConsumerStatefulWidget {
 
 class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
   bool notSetStartKey = true;
-  final viewTransformationController = TransformationController();
 
   @override
   Widget build(BuildContext context) {

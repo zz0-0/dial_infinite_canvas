@@ -19,6 +19,14 @@ final edgePainterProvider = Provider(
     cardPositions: ref.watch(cardPositionMapProvider),
   ),
 );
+final scaleProvider = StateProvider((ref) => 1.0);
+final transformationControllerProvider = Provider((ref) {
+  var scale = ref.watch(scaleProvider);
+  TransformationController transformationController =
+      TransformationController();
+  transformationController.value.scale(scale);
+  return transformationController;
+});
 
 // class MyParameter extends Equatable{
 

@@ -4,7 +4,26 @@ import 'package:aimed_infinite_canvas/src/provider.dart';
 
 class DetailCardWidget extends ConsumerStatefulWidget {
   final GlobalKey cardKey;
+  final Function? onCardDragBegin;
+  final Function? onCardDragging;
+  final Function? onCardDragEnd;
+  final Function? onCardClick;
+  final Function? onCardDoubleClick;
+  final Function? onCardLongPressed;
+  final Function? onCardMouseEnter;
+  final Function? onCardMouseLeave;
+  final Function? onCardMouseMoveInside;
+
   const DetailCardWidget({
+    this.onCardDragBegin,
+    this.onCardDragging,
+    this.onCardDragEnd,
+    this.onCardClick,
+    this.onCardDoubleClick,
+    this.onCardLongPressed,
+    this.onCardMouseEnter,
+    this.onCardMouseLeave,
+    this.onCardMouseMoveInside,
     super.key,
     required this.cardKey,
   });
@@ -17,7 +36,6 @@ class DetailCardWidget extends ConsumerStatefulWidget {
 class _DetailCardWidgetState extends ConsumerState<DetailCardWidget> {
   @override
   Widget build(BuildContext context) {
-    // var cardKey = ref.watch(cardKeyProvider);
     var notSetStarNode = ref.watch(notSetStartNodeProvider);
     const sizedBox = SizedBox(
       height: 200,

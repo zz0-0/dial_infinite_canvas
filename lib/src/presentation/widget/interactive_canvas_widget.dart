@@ -30,6 +30,7 @@ class _InteractiveCanvasWidgetState
     // Future.delayed(Duration.zero, () => executeAfterBuild(ref));
 
     return InteractiveViewer(
+      transformationController: ref.watch(transformationControllerProvider),
       boundaryMargin: const EdgeInsets.all(0),
       onInteractionStart: (details) {},
       onInteractionUpdate: (details) {},
