@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:aimed_infinite_canvas/src/presentation/widget/detail_card_widget.dart';
 import 'package:aimed_infinite_canvas/src/presentation/widget/interactive_canvas_widget.dart';
 
 final cardKeyProvider = StateProvider<GlobalKey?>((ref) => null);
@@ -27,6 +28,7 @@ final transformationControllerProvider = Provider((ref) {
   transformationController.value.scale(scale);
   return transformationController;
 });
+final cardTypeProvider = StateProvider((ref) => CardType.simple);
 
 // class MyParameter extends Equatable{
 

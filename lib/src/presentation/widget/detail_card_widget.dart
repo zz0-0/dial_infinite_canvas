@@ -33,11 +33,19 @@ class DetailCardWidget extends ConsumerStatefulWidget {
       _DetailCardWidgetState();
 }
 
+enum CardType {
+  simple("Simple"),
+  complex("Complex");
+
+  const CardType(this.label);
+  final String label;
+}
+
 class _DetailCardWidgetState extends ConsumerState<DetailCardWidget> {
   @override
   Widget build(BuildContext context) {
     var notSetStarNode = ref.watch(notSetStartNodeProvider);
-    const sizedBox = SizedBox(
+    var sizedBox = SizedBox(
       height: 200,
       width: 200,
       child: Stack(
@@ -45,9 +53,21 @@ class _DetailCardWidgetState extends ConsumerState<DetailCardWidget> {
           Card(
             child: Column(
               children: [
-                ListTile(
-                  title: Text("Title"),
-                  subtitle: Text("SubTitle"),
+                DropdownMenu(
+                  enableSearch: false,
+                  initialSelection: CardType.simple,
+                  dropdownMenuEntries: CardType.values.map(
+                    (e) {
+                      return DropdownMenuEntry<CardType>(
+                          value: e, label: e.label);
+                    },
+                  ).toList(),
+                  onSelected: (value) => ref
+                      .read(cardTypeProvider.notifier)
+                      .update((state) => state = value!),
+                ),
+                Container(
+                  child: setChildByType(),
                 ),
               ],
             ),
@@ -99,5 +119,21 @@ class _DetailCardWidgetState extends ConsumerState<DetailCardWidget> {
         ),
       ],
     );
+  }
+
+  setChildByType() {
+    switch (ref.watch(cardTypeProvider)) {
+      case CardType.simple:
+        return const ListTile(
+          title: Text("Title"),
+          subtitle: Text("SubTitle"),
+        );
+      case CardType.complex:
+        return const ListTile(
+          title: Text("Title1"),
+          subtitle: Text("SubTitle1"),
+        );
+      default:
+    }
   }
 }
