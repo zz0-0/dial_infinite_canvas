@@ -5,16 +5,15 @@ import 'package:aimed_infinite_canvas/src/presentation/widget/background.dart';
 
 var newCardPositions = {};
 
-class InteractiveCanvasWidget extends ConsumerStatefulWidget {
-  const InteractiveCanvasWidget({super.key});
+class InteractiveCanvas extends ConsumerStatefulWidget {
+  const InteractiveCanvas({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _InteractiveCanvasWidgetState();
+      _InteractiveCanvasState();
 }
 
-class _InteractiveCanvasWidgetState
-    extends ConsumerState<InteractiveCanvasWidget> {
+class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
   // executeAfterBuild(WidgetRef ref) {
   //   print(newCardPositions);
   //   ref.read(cardPositionMapProvider.notifier).update((state) {
@@ -48,7 +47,7 @@ class _InteractiveCanvasWidgetState
                 return CustomMultiChildLayout(
                   delegate: DetailCardWidgetsDelegate(ref),
                   children: [
-                    ...ref.watch(detailCardWidgetListProvider),
+                    ...ref.watch(detailCardListProvider),
                   ],
                 );
               },

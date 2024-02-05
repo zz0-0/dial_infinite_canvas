@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:aimed_infinite_canvas/src/presentation/widget/detail_card_widget.dart';
-import 'package:aimed_infinite_canvas/src/presentation/widget/interactive_canvas_widget.dart';
+import 'package:aimed_infinite_canvas/src/presentation/widget/detail_card.dart';
+import 'package:aimed_infinite_canvas/src/presentation/widget/interactive_canvas.dart';
 
 final cardKeyProvider = StateProvider<GlobalKey?>((ref) => null);
 final startKeyProvider = StateProvider<GlobalKey?>((ref) => null);
@@ -9,7 +9,7 @@ final endKeyProvider = StateProvider<GlobalKey?>((ref) => null);
 final notSetStartNodeProvider = StateProvider<bool>((ref) => true);
 final connectedNodeListProvider =
     StateProvider<List<(GlobalKey, GlobalKey)>>((ref) => []);
-final detailCardWidgetListProvider = StateProvider<List<LayoutId>>((ref) => []);
+final detailCardListProvider = StateProvider<List<LayoutId>>((ref) => []);
 final cardPositionMapProvider =
     StateProvider<Map<GlobalKey, Offset>>((ref) => {});
 final edgePainterProvider = Provider(

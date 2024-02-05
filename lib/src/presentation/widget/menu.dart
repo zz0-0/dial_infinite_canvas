@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aimed_infinite_canvas/src/provider.dart';
-import 'package:aimed_infinite_canvas/src/presentation/widget/detail_card_widget.dart';
+import 'package:aimed_infinite_canvas/src/presentation/widget/detail_card.dart';
 
 class Menu extends ConsumerStatefulWidget {
   const Menu({super.key});
@@ -18,7 +18,7 @@ class _MenuState extends ConsumerState<Menu> {
       width: 100,
       child: Column(children: [
         IconButton(
-          onPressed: () => createDetailCardWidget(ref),
+          onPressed: () => createDetailCard(ref),
           icon: const Icon(Icons.add_box_outlined),
         ),
         IconButton(
@@ -37,20 +37,20 @@ class _MenuState extends ConsumerState<Menu> {
     );
   }
 
-  createDetailCardWidget(WidgetRef ref) {
+  createDetailCard(WidgetRef ref) {
     final GlobalKey key = GlobalKey();
     var positionWidget = LayoutId(
       id: key,
-      child: DetailCardWidget(
+      child: DetailCard(
         cardKey: key,
       ),
     );
 
-    var details = ref.read(detailCardWidgetListProvider);
+    var details = ref.read(detailCardListProvider);
     details.add(positionWidget);
 
     ref
-        .read(detailCardWidgetListProvider.notifier)
+        .read(detailCardListProvider.notifier)
         .update((state) => details.toList());
 
     var positions = ref.read(cardPositionMapProvider);

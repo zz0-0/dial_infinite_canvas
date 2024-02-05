@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aimed_infinite_canvas/src/provider.dart';
+import 'package:aimed_infinite_canvas/src/presentation/widget/resizer.dart';
 
-class DetailCardWidget extends ConsumerStatefulWidget {
+class DetailCard extends ConsumerStatefulWidget {
   final GlobalKey cardKey;
   final Function? onCardDragBegin;
   final Function? onCardDragging;
@@ -14,7 +15,7 @@ class DetailCardWidget extends ConsumerStatefulWidget {
   final Function? onCardMouseLeave;
   final Function? onCardMouseMoveInside;
 
-  const DetailCardWidget({
+  const DetailCard({
     this.onCardDragBegin,
     this.onCardDragging,
     this.onCardDragEnd,
@@ -29,8 +30,7 @@ class DetailCardWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _DetailCardWidgetState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _DetailCardState();
 }
 
 enum CardType {
@@ -41,40 +41,43 @@ enum CardType {
   final String label;
 }
 
-class _DetailCardWidgetState extends ConsumerState<DetailCardWidget> {
+class _DetailCardState extends ConsumerState<DetailCard> {
   @override
   Widget build(BuildContext context) {
     var notSetStarNode = ref.watch(notSetStartNodeProvider);
-    var sizedBox = SizedBox(
-      height: 200,
-      width: 200,
-      child: Stack(
-        children: [
-          Card(
-            child: Column(
-              children: [
-                DropdownMenu(
-                  enableSearch: false,
-                  initialSelection: CardType.simple,
-                  dropdownMenuEntries: CardType.values.map(
-                    (e) {
-                      return DropdownMenuEntry<CardType>(
-                          value: e, label: e.label);
-                    },
-                  ).toList(),
-                  onSelected: (value) => ref
-                      .read(cardTypeProvider.notifier)
-                      .update((state) => state = value!),
-                ),
-                Container(
-                  child: setChildByType(),
-                ),
-              ],
+    var sizedBox = Resizer(
+      child: Card(
+        child: Column(
+          children: [
+            DropdownMenu(
+              enableSearch: false,
+              initialSelection: CardType.simple,
+              dropdownMenuEntries: CardType.values.map(
+                (e) {
+                  return DropdownMenuEntry<CardType>(value: e, label: e.label);
+                },
+              ).toList(),
+              onSelected: (value) => ref
+                  .read(cardTypeProvider.notifier)
+                  .update((state) => state = value!),
             ),
-          ),
-        ],
+            Container(
+              child: setChildByType(),
+            ),
+          ],
+        ),
       ),
     );
+
+    // SizedBox(
+    //   height: 200,
+    //   width: 200,
+    //   child: Stack(
+    //     children: [
+
+    //     ],
+    //   ),
+    // );
     return Stack(
       children: [
         Draggable(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aimed_infinite_canvas/src/presentation/widget/menu.dart';
-import 'package:aimed_infinite_canvas/src/presentation/widget/interactive_canvas_widget.dart';
+import 'package:aimed_infinite_canvas/src/presentation/widget/interactive_canvas.dart';
 
 class InfiniteCanvas extends ConsumerStatefulWidget {
   const InfiniteCanvas({super.key});
@@ -20,7 +20,7 @@ class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
         builder: (context, constraints) {
           return const Stack(
             children: [
-              InteractiveCanvasWidget(),
+              InteractiveCanvas(),
               Positioned(
                 left: 10,
                 bottom: 10,
