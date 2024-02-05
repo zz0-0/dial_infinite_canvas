@@ -185,10 +185,10 @@ class ManipulatingBall extends StatefulWidget {
   final Function onDrag;
 
   @override
-  _ManipulatingBallState createState() => _ManipulatingBallState();
+  ManipulatingBallState createState() => ManipulatingBallState();
 }
 
-class _ManipulatingBallState extends State<ManipulatingBall> {
+class ManipulatingBallState extends State<ManipulatingBall> {
   late double initX;
   late double initY;
 

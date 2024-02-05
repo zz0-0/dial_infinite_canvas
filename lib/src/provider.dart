@@ -12,13 +12,16 @@ final connectedNodeListProvider =
 final detailCardListProvider = StateProvider<List<LayoutId>>((ref) => []);
 final cardPositionMapProvider =
     StateProvider<Map<GlobalKey, Offset>>((ref) => {});
+final mouseXProvider = StateProvider((ref) => 0.0);
+final mouseYProvider = StateProvider((ref) => 0.0);
 final edgePainterProvider = Provider(
   (ref) => EdgePainter(
-    node: ref.watch(connectedNodeListProvider),
-    start: ref.watch(startKeyProvider),
-    end: ref.watch(endKeyProvider),
-    cardPositions: ref.watch(cardPositionMapProvider),
-  ),
+      node: ref.watch(connectedNodeListProvider),
+      start: ref.watch(startKeyProvider),
+      end: ref.watch(endKeyProvider),
+      cardPositions: ref.watch(cardPositionMapProvider),
+      mouseX: ref.watch(mouseXProvider),
+      mouseY: ref.watch(mouseYProvider)),
 );
 final scaleProvider = StateProvider((ref) => 1.0);
 final transformationControllerProvider = Provider((ref) {
