@@ -45,8 +45,9 @@ class _DetailCardState extends ConsumerState<DetailCard> {
   @override
   Widget build(BuildContext context) {
     var notSetStarNode = ref.watch(notSetStartNodeProvider);
-    var sizedBox = Resizer(
-      child: Card(
+    var sizedBox = Card(
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
             DropdownMenu(
@@ -61,9 +62,9 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                   .read(cardTypeProvider.notifier)
                   .update((state) => state = value!),
             ),
-            Container(
-              child: setChildByType(),
-            ),
+            // Container(
+            //   child: setChildByType(),
+            // ),
           ],
         ),
       ),
@@ -80,18 +81,20 @@ class _DetailCardState extends ConsumerState<DetailCard> {
     // );
     return Stack(
       children: [
-        Draggable(
-          feedback: sizedBox,
-          onDragEnd: (details) {
-            var positions = ref.read(cardPositionMapProvider);
-            positions[widget.cardKey] = details.offset;
+        Resizer(
+          child: Draggable(
+            feedback: sizedBox,
+            onDragEnd: (details) {
+              var positions = ref.read(cardPositionMapProvider);
+              positions[widget.cardKey] = details.offset;
 
-            ref.read(cardPositionMapProvider.notifier).update((state) {
-              state = Map.from(positions);
-              return state;
-            });
-          },
-          child: sizedBox,
+              ref.read(cardPositionMapProvider.notifier).update((state) {
+                state = Map.from(positions);
+                return state;
+              });
+            },
+            child: sizedBox,
+          ),
         ),
         GestureDetector(
           onTapDown: (details) {
@@ -112,8 +115,8 @@ class _DetailCardState extends ConsumerState<DetailCard> {
             }
           },
           child: Container(
-            width: 50,
-            height: 50,
+            width: 10,
+            height: 10,
             decoration: const BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,

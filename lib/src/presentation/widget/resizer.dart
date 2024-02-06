@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+enum ResizeDirection {
+  // top("TOP"),
+  bottom("BOTTOM"),
+  // left("LEFT"),
+  right("RIGHT"),
+  bottomRight("BOTTOMRIGHT");
+
+  const ResizeDirection(this.label);
+  final String label;
+}
+
 class Resizer extends ConsumerStatefulWidget {
   const Resizer({
     super.key,
@@ -16,210 +27,187 @@ class Resizer extends ConsumerStatefulWidget {
 const ballDiameter = 30.0;
 
 class _ResizerState extends ConsumerState<Resizer> {
-  double top = 0.0, left = 0.0;
+  double top = 0.0, left = 0.0, bottom = 0.0, right = 0.0;
   double width = 200.0, height = 200.0;
+  double newWidth = 0;
+  bool dragTop = false, dragBottom = false, dragLeft = false, dragRight = false;
+  var initX, initY;
 
   @override
   Widget build(BuildContext context) {
+    // bottom = height - 10;
     return SizedBox(
       width: width,
       height: height,
       child: Stack(
         children: [
+          // if (dragBottom ||
+          //     dragRight ||
+          //     !(dragTop && dragBottom && dragLeft && dragRight))
           Positioned(
             top: top,
             left: left,
+            // right: right,
+            // bottom: bottom,
             child: SizedBox(
               width: width,
               height: height,
               child: widget.child,
             ),
           ),
+          // if (dragTop || dragLeft)
+          // Positioned(
+          //   bottom: bottom,
+          //   right: right,
+          //   child: SizedBox(
+          //     width: width,
+          //     height: height,
+          //     child: widget.child,
+          //   ),
+          // ),
+          // 左
+          // Positioned(
+          //   top: top,
+          //   left: left,
+          //   height: height,
+          //   width: 20,
+          //   child: GestureDetector(
+          //     child: Text("qqqqqq"),
+          //     onPanStart: (details) => startDrag(details, ResizeDirection.left),
+          //     onPanUpdate: (details) =>
+          //         updateDrag(details, ResizeDirection.left),
+          //   ),
+          // ),
+          // 上
+          // Positioned(
+          //   top: top,
+          //   left: left,
+          //   height: 20,
+          //   width: width,
+          //   child: GestureDetector(
+          //     child: Text("wwwwww"),
+          //     onPanStart: (details) => startDrag(details, ResizeDirection.top),
+          //     onPanUpdate: (details) =>
+          //         updateDrag(details, ResizeDirection.top),
+          //   ),
+          // ),
+          // 右
           Positioned(
-            top: top - ballDiameter / 2,
-            left: left - ballDiameter / 2,
-            child: ManipulatingBall(onDrag: (dx, dy) {
-              var mid = (dx + dy) / 2;
-              var newHeight = height - 2 * mid;
-              var newWidth = width - 2 * mid;
-              setState(() {
-                height = newHeight > 0 ? newHeight : 0;
-                width = newWidth > 0 ? newWidth : 0;
-                top = top + mid;
-                left = left + mid;
-              });
-            }),
-          ),
-          Positioned(
-            top: top - ballDiameter / 2,
-            left: left + width / 2 - ballDiameter / 2,
-            child: ManipulatingBall(
-              onDrag: (dx, dy) {
-                var newHeight = height - dy;
-
-                setState(() {
-                  height = newHeight > 0 ? newHeight : 0;
-                  top = top + dy;
-                });
-              },
+            top: top,
+            left: left + width - 20,
+            height: height - 40,
+            width: 20,
+            child: GestureDetector(
+              onPanStart: (details) =>
+                  startDrag(details, ResizeDirection.right),
+              onPanUpdate: (details) =>
+                  updateDrag(details, ResizeDirection.right),
             ),
           ),
+          // 下
           Positioned(
-            top: top - ballDiameter / 2,
-            left: left + width - ballDiameter / 2,
-            child: ManipulatingBall(
-              onDrag: (dx, dy) {
-                var mid = (dx + (dy * -1)) / 2;
-
-                var newHeight = height + 2 * mid;
-                var newWidth = width + 2 * mid;
-
-                setState(() {
-                  height = newHeight > 0 ? newHeight : 0;
-                  width = newWidth > 0 ? newWidth : 0;
-                  top = top - mid;
-                  left = left - mid;
-                });
-              },
+            top: top + height - 20,
+            left: left,
+            height: 20,
+            width: width - 40,
+            child: GestureDetector(
+              onPanStart: (details) =>
+                  startDrag(details, ResizeDirection.bottom),
+              onPanUpdate: (details) =>
+                  updateDrag(details, ResizeDirection.bottom),
             ),
           ),
+          // 右下
           Positioned(
-            top: top + height / 2 - ballDiameter / 2,
-            left: left + width - ballDiameter / 2,
-            child: ManipulatingBall(
-              onDrag: (dx, dy) {
-                var newWidth = width + dx;
-
-                setState(() {
-                  width = newWidth > 0 ? newWidth : 0;
-                });
-              },
-            ),
-          ),
-          Positioned(
-            top: top + height - ballDiameter / 2,
-            left: left + width - ballDiameter / 2,
-            child: ManipulatingBall(
-              onDrag: (dx, dy) {
-                var mid = (dx + dy) / 2;
-
-                var newHeight = height + 2 * mid;
-                var newWidth = width + 2 * mid;
-
-                setState(() {
-                  height = newHeight > 0 ? newHeight : 0;
-                  width = newWidth > 0 ? newWidth : 0;
-                  top = top - mid;
-                  left = left - mid;
-                });
-              },
-            ),
-          ),
-          Positioned(
-            top: top + height - ballDiameter / 2,
-            left: left + width / 2 - ballDiameter / 2,
-            child: ManipulatingBall(
-              onDrag: (dx, dy) {
-                var newHeight = height + dy;
-
-                setState(() {
-                  height = newHeight > 0 ? newHeight : 0;
-                });
-              },
-            ),
-          ),
-          Positioned(
-            top: top + height - ballDiameter / 2,
-            left: left - ballDiameter / 2,
-            child: ManipulatingBall(
-              onDrag: (dx, dy) {
-                var mid = ((dx * -1) + dy) / 2;
-
-                var newHeight = height + 2 * mid;
-                var newWidth = width + 2 * mid;
-
-                setState(() {
-                  height = newHeight > 0 ? newHeight : 0;
-                  width = newWidth > 0 ? newWidth : 0;
-                  top = top - mid;
-                  left = left - mid;
-                });
-              },
-            ),
-          ),
-          Positioned(
-            top: top + height / 2 - ballDiameter / 2,
-            left: left - ballDiameter / 2,
-            child: ManipulatingBall(
-              onDrag: (dx, dy) {
-                var newWidth = width - dx;
-
-                setState(() {
-                  width = newWidth > 0 ? newWidth : 0;
-                  left = left + dx;
-                });
-              },
-            ),
-          ),
-          Positioned(
-            top: top + height / 2 - ballDiameter / 2,
-            left: left + width / 2 - ballDiameter / 2,
-            child: ManipulatingBall(
-              onDrag: (dx, dy) {
-                setState(() {
-                  top = top + dy;
-                  left = left + dx;
-                });
-              },
+            top: top + height - 20,
+            left: left + width - 20,
+            height: 20,
+            width: 20,
+            child: GestureDetector(
+              onPanStart: (details) =>
+                  startDrag(details, ResizeDirection.bottomRight),
+              onPanUpdate: (details) =>
+                  updateDrag(details, ResizeDirection.bottomRight),
             ),
           ),
         ],
       ),
     );
   }
-}
 
-class ManipulatingBall extends StatefulWidget {
-  const ManipulatingBall({super.key, required this.onDrag});
-
-  final Function onDrag;
-
-  @override
-  ManipulatingBallState createState() => ManipulatingBallState();
-}
-
-class ManipulatingBallState extends State<ManipulatingBall> {
-  late double initX;
-  late double initY;
-
-  _handleDrag(details) {
-    setState(() {
-      initX = details.globalPosition.dx;
-      initY = details.globalPosition.dy;
-    });
-  }
-
-  _handleUpdate(details) {
-    var dx = details.globalPosition.dx - initX;
-    var dy = details.globalPosition.dy - initY;
+  void startDrag(DragStartDetails details, ResizeDirection direction) {
     initX = details.globalPosition.dx;
     initY = details.globalPosition.dy;
-    widget.onDrag(dx, dy);
+    // switch (direction) {
+    // case ResizeDirection.top:
+    //   dragTop = true;
+    //   print(initX);
+    //   break;
+    // case ResizeDirection.bottom:
+    //   dragBottom = true;
+    //   break;
+    // case ResizeDirection.left:
+    //   dragLeft = true;
+    //   break;
+    // case ResizeDirection.right:
+    //   dragRight = true;
+    //   break;
+    // default:
+    // }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onPanStart: _handleDrag,
-      onPanUpdate: _handleUpdate,
-      child: Container(
-        width: ballDiameter,
-        height: ballDiameter,
-        decoration: BoxDecoration(
-          color: Colors.blue.withOpacity(0.5),
-          shape: BoxShape.circle,
-        ),
-      ),
-    );
+  void updateDrag(DragUpdateDetails details, ResizeDirection direction) {
+    switch (direction) {
+      // case ResizeDirection.top:
+      //   var dy = details.globalPosition.dy - initY;
+      //   var newHeight = height + dy;
+      //   print("init:$initY");
+      //   print("after:$dy");
+      //   setState(() {
+      //     height = newHeight;
+      //     // top = top + newHeight;
+      //   });
+      //   initY = details.globalPosition.dy;
+      //   break;
+      case ResizeDirection.bottom:
+        var dy = details.globalPosition.dy - initY;
+        var newHeight = height + dy;
+        setState(() {
+          height = newHeight;
+        });
+        initY = details.globalPosition.dy;
+        break;
+      // case ResizeDirection.left:
+      //   var dx = details.globalPosition.dx - initX;
+      //   var newWidth = width + dx;
+      //   setState(() {
+      //     width = newWidth > 0 ? newWidth : 0;
+      //   });
+      //   initX = details.globalPosition.dx;
+      //   break;
+      case ResizeDirection.right:
+        var dx = details.globalPosition.dx - initX;
+        var newWidth = width + dx;
+        setState(() {
+          width = newWidth;
+        });
+        initX = details.globalPosition.dx;
+        break;
+      case ResizeDirection.bottomRight:
+        var dx = details.globalPosition.dx - initX;
+        var dy = details.globalPosition.dy - initY;
+        var newWidth = width + dx;
+        var newHeight = height + dy;
+        setState(() {
+          width = newWidth;
+          height = newHeight;
+        });
+        initX = details.globalPosition.dx;
+        initY = details.globalPosition.dy;
+        break;
+      default:
+      // initX = 0;
+      // initY = 0;
+    }
   }
 }
