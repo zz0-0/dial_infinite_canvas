@@ -3,6 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aimed_infinite_canvas/src/presentation/widget/detail_card.dart';
 import 'package:aimed_infinite_canvas/src/presentation/widget/interactive_canvas.dart';
 
+final menuLeftPositionProvider = StateProvider<double>((ref) => 10);
+final menuBottomPositionProvider = StateProvider<double>((ref) => 10);
+final canvasHeightProvider = StateProvider<double>((ref) => 1000.0);
+final canvasWidthProvider = StateProvider<double>((ref) => 1000.0);
+final divisionsProvider = StateProvider<int>((ref) => 2);
+final subdivisionsProvider = StateProvider<int>((ref) => 2);
+final cardHeightProvider = StateProvider<double>((ref) => 200);
+final cardWidthProvider = StateProvider<double>((ref) => 200);
+
 final cardKeyProvider = StateProvider<GlobalKey?>((ref) => null);
 final startKeyProvider = StateProvider<GlobalKey?>((ref) => null);
 final endKeyProvider = StateProvider<GlobalKey?>((ref) => null);
@@ -12,6 +21,8 @@ final connectedNodeListProvider =
 final detailCardListProvider = StateProvider<List<LayoutId>>((ref) => []);
 final cardPositionMapProvider =
     StateProvider<Map<GlobalKey, Offset>>((ref) => {});
+final nodePositionMapProvider =
+    StateProvider<Map<GlobalKey, Offset>>((ref) => {});
 final mouseXProvider = StateProvider((ref) => 0.0);
 final mouseYProvider = StateProvider((ref) => 0.0);
 final edgePainterProvider = Provider(
@@ -19,7 +30,7 @@ final edgePainterProvider = Provider(
     node: ref.watch(connectedNodeListProvider),
     start: ref.watch(startKeyProvider),
     end: ref.watch(endKeyProvider),
-    cardPositions: ref.watch(cardPositionMapProvider),
+    nodePositions: ref.watch(nodePositionMapProvider),
     mouseX: ref.watch(mouseXProvider),
     mouseY: ref.watch(mouseYProvider),
   ),
@@ -33,9 +44,3 @@ final transformationControllerProvider = Provider((ref) {
   return transformationController;
 });
 final cardTypeProvider = StateProvider((ref) => CardType.simple);
-
-// class MyParameter extends Equatable{
-
-// }
-
-// final edgePainterProvider = Provider.family<>((ref, ) {});

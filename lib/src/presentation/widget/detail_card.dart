@@ -46,39 +46,28 @@ class _DetailCardState extends ConsumerState<DetailCard> {
   Widget build(BuildContext context) {
     var notSetStarNode = ref.watch(notSetStartNodeProvider);
     var sizedBox = Card(
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            DropdownMenu(
-              enableSearch: false,
-              initialSelection: CardType.simple,
-              dropdownMenuEntries: CardType.values.map(
-                (e) {
-                  return DropdownMenuEntry<CardType>(value: e, label: e.label);
-                },
-              ).toList(),
-              onSelected: (value) => ref
-                  .read(cardTypeProvider.notifier)
-                  .update((state) => state = value!),
-            ),
-            // Container(
-            //   child: setChildByType(),
-            // ),
-          ],
-        ),
+      child: Column(
+        children: [
+          DropdownMenu(
+            enableSearch: false,
+            initialSelection: CardType.simple,
+            dropdownMenuEntries: CardType.values.map(
+              (e) {
+                return DropdownMenuEntry<CardType>(value: e, label: e.label);
+              },
+            ).toList(),
+            onSelected: (value) => ref
+                .read(cardTypeProvider.notifier)
+                .update((state) => state = value!),
+          ),
+          SizedBox(
+            width: 100,
+            height: 100,
+            child: setChildByType(),
+          )
+        ],
       ),
     );
-
-    // SizedBox(
-    //   height: 200,
-    //   width: 200,
-    //   child: Stack(
-    //     children: [
-
-    //     ],
-    //   ),
-    // );
     return Stack(
       children: [
         Resizer(
@@ -96,30 +85,34 @@ class _DetailCardState extends ConsumerState<DetailCard> {
             child: sizedBox,
           ),
         ),
-        GestureDetector(
-          onTapDown: (details) {
-            if (notSetStarNode) {
-              ref
-                  .read(startKeyProvider.notifier)
-                  .update((state) => widget.cardKey);
-              ref
-                  .read(notSetStartNodeProvider.notifier)
-                  .update((state) => false);
-            } else {
-              ref
-                  .read(endKeyProvider.notifier)
-                  .update((state) => widget.cardKey);
-              ref
-                  .read(notSetStartNodeProvider.notifier)
-                  .update((state) => true);
-            }
-          },
-          child: Container(
-            width: 10,
-            height: 10,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
+        Positioned(
+          bottom: 100,
+          right: 0,
+          child: GestureDetector(
+            onTapDown: (details) {
+              if (notSetStarNode) {
+                ref
+                    .read(startKeyProvider.notifier)
+                    .update((state) => widget.cardKey);
+                ref
+                    .read(notSetStartNodeProvider.notifier)
+                    .update((state) => false);
+              } else {
+                ref
+                    .read(endKeyProvider.notifier)
+                    .update((state) => widget.cardKey);
+                ref
+                    .read(notSetStartNodeProvider.notifier)
+                    .update((state) => true);
+              }
+            },
+            child: Container(
+              width: 10,
+              height: 10,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
             ),
           ),
         ),
@@ -130,9 +123,15 @@ class _DetailCardState extends ConsumerState<DetailCard> {
   setChildByType() {
     switch (ref.watch(cardTypeProvider)) {
       case CardType.simple:
-        return const ListTile(
-          title: Text("Title"),
-          subtitle: Text("SubTitle"),
+        return const Row(
+          children: [
+            Icon(Icons.abc),
+            Text("data"),
+            Expanded(
+                child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Icon(Icons.check_circle)))
+          ],
         );
       case CardType.complex:
         return const ListTile(

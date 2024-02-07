@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:aimed_infinite_canvas/src/domain/model/node.dart';
 
 class DetailCard {
   DetailCard({
     required this.key,
-    required this.title,
-    required this.nodes,
+    required this.position,
+    required this.height,
+    required this.width,
   });
 
   final LocalKey key;
-  final List<Node> nodes;
-  final String title;
+  final Offset position;
+  final double height;
+  final double width;
 }

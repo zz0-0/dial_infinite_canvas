@@ -53,11 +53,19 @@ class _MenuState extends ConsumerState<Menu> {
         .read(detailCardListProvider.notifier)
         .update((state) => details.toList());
 
-    var positions = ref.read(cardPositionMapProvider);
-    positions[key] = Offset.infinite;
+    var cardPositions = ref.read(cardPositionMapProvider);
+    cardPositions[key] = Offset.infinite;
 
     ref.read(cardPositionMapProvider.notifier).update((state) {
-      state = Map.from(positions);
+      state = Map.from(cardPositions);
+      return state;
+    });
+
+    var nodePositions = ref.read(nodePositionMapProvider);
+    nodePositions[key] = Offset.infinite;
+
+    ref.read(nodePositionMapProvider.notifier).update((state) {
+      state = Map.from(nodePositions);
       return state;
     });
   }

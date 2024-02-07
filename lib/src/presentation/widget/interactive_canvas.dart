@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aimed_infinite_canvas/src/provider.dart';
 import 'package:aimed_infinite_canvas/src/presentation/widget/background.dart';
 
-var newCardPositions = {};
-
 class InteractiveCanvas extends ConsumerStatefulWidget {
   const InteractiveCanvas({super.key});
 
@@ -14,36 +12,20 @@ class InteractiveCanvas extends ConsumerStatefulWidget {
 }
 
 class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
-  // executeAfterBuild(WidgetRef ref) {
-  //   print(newCardPositions);
-  //   ref.read(cardPositionMapProvider.notifier).update((state) {
-  //     state = Map.from(newCardPositions);
-  //     return state;
-  //   });
-  // }
-  double x = 0.0;
-  double y = 0.0;
-
   @override
   Widget build(BuildContext context) {
-    double cx = 1000.0;
-    double cy = 1000.0;
-
-    // Future.delayed(Duration.zero, () => executeAfterBuild(ref));
-
+    var canvasWidth = ref.watch(canvasWidthProvider);
+    var canvasHeight = ref.watch(canvasHeightProvider);
     return MouseRegion(
       onHover: updateMouseLocation,
       child: InteractiveViewer(
         transformationController: ref.watch(transformationControllerProvider),
         boundaryMargin: const EdgeInsets.all(0),
-        onInteractionStart: (details) {},
-        onInteractionUpdate: (details) {},
-        onInteractionEnd: (details) {},
         clipBehavior: Clip.none,
         constrained: false,
         child: SizedBox(
-          width: 2 * cx,
-          height: 2 * cy,
+          width: 2 * canvasWidth,
+          height: 2 * canvasHeight,
           child: Stack(
             children: [
               const Background(),
@@ -60,13 +42,6 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
               Consumer(
                 builder: (BuildContext context, WidgetRef ref, Widget? child) {
                   return CustomPaint(painter: ref.watch(edgePainterProvider));
-                  // EdgePainter(
-                  //   node: ref.watch(connectedNodeListProvider),
-                  //   start: ref.watch(startKeyProvider),
-                  //   end: ref.watch(endKeyProvider),
-                  //   cardPositions: ref.watch(cardPositionMapProvider),
-                  //   // ref: ref,
-                  // ),
                 },
               ),
             ],
@@ -83,8 +58,6 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
     ref
         .read(mouseYProvider.notifier)
         .update((state) => state = details.position.dy);
-    // x = details.position.dx;
-    // y = details.position.dy;
   }
 }
 
@@ -92,55 +65,43 @@ class EdgePainter extends CustomPainter {
   List<(GlobalKey, GlobalKey)> node;
   GlobalKey? start;
   GlobalKey? end;
-  Map<GlobalKey, Offset> cardPositions;
+  Map<GlobalKey, Offset> nodePositions;
   double mouseX;
   double mouseY;
-  // WidgetRef ref;
 
-  EdgePainter(
-      {required this.node,
-      required this.start,
-      required this.end,
-      required this.cardPositions,
-      required this.mouseX,
-      required this.mouseY
-      // required this.ref,
-      });
+  EdgePainter({
+    required this.node,
+    required this.start,
+    required this.end,
+    required this.nodePositions,
+    required this.mouseX,
+    required this.mouseY,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = Colors.blue;
-    // var node = ref.watch(connectedNodeListProvider);
-    // var start = ref.watch(startKeyProvider);
-    // var end = ref.watch(endKeyProvider);
-    // var cardPositions = ref.watch(cardPositionMapProvider);
 
     if (node.isNotEmpty) {
       for (var i in node) {
-        if (cardPositions[i.$1] != Offset.infinite &&
-            cardPositions[i.$2] != Offset.infinite) {
-          canvas.drawLine(cardPositions[i.$1]!, cardPositions[i.$2]!, paint);
+        if (nodePositions[i.$1] != Offset.infinite &&
+            nodePositions[i.$2] != Offset.infinite) {
+          canvas.drawLine(nodePositions[i.$1]!, nodePositions[i.$2]!, paint);
         }
       }
     }
 
     if (start != null) {
       if (end != null) {
-        if (cardPositions[start] != Offset.infinite &&
-            cardPositions[end] != Offset.infinite) {
-          canvas.drawLine(cardPositions[start]!, cardPositions[end]!, paint);
+        if (nodePositions[start] != Offset.infinite &&
+            nodePositions[end] != Offset.infinite) {
+          canvas.drawLine(nodePositions[start]!, nodePositions[end]!, paint);
           node.add((start!, end!));
-          // var nodeValue = ref.read(connectedNodeListProvider);
-          // nodeValue.add((start, end));
-          // ref.read(connectedNodeListProvider.notifier).update((state) {
-          //   state = nodeValue.toList();
-          //   return state;
-          // });
           start = null;
           end = null;
         }
       } else {
-        canvas.drawLine(cardPositions[start]!, Offset(mouseX, mouseY), paint);
+        canvas.drawLine(nodePositions[start]!, Offset(mouseX, mouseY), paint);
       }
     }
   }
@@ -163,10 +124,8 @@ class DetailCardWidgetsDelegate extends MultiChildLayoutDelegate {
             key, BoxConstraints(maxWidth: size.width, maxHeight: size.height));
         if (cardPositions[key] != Offset.infinite) {
           positionChild(key, cardPositions[key]!);
-          newCardPositions[key] = cardPositions[key]!;
         } else {
           positionChild(key, childPosition);
-          newCardPositions[key] = childPosition;
           childPosition += Offset(0, currentSize.height + 5);
         }
       }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:aimed_infinite_canvas/src/provider.dart';
 
 enum ResizeDirection {
   // top("TOP"),
@@ -28,14 +29,17 @@ const ballDiameter = 30.0;
 
 class _ResizerState extends ConsumerState<Resizer> {
   double top = 0.0, left = 0.0, bottom = 0.0, right = 0.0;
-  double width = 200.0, height = 200.0;
-  double newWidth = 0;
+  late double width, height;
   bool dragTop = false, dragBottom = false, dragLeft = false, dragRight = false;
-  var initX, initY;
+  double initX = 0.0, initY = 0.0;
 
   @override
   Widget build(BuildContext context) {
+    width = ref.watch(cardWidthProvider);
+    height = ref.watch(cardHeightProvider);
+
     // bottom = height - 10;
+    bool isHovering = false;
     return SizedBox(
       width: width,
       height: height,
@@ -95,13 +99,29 @@ class _ResizerState extends ConsumerState<Resizer> {
           Positioned(
             top: top,
             left: left + width - 20,
-            height: height - 40,
+            height: height - 20,
             width: 20,
-            child: GestureDetector(
-              onPanStart: (details) =>
-                  startDrag(details, ResizeDirection.right),
-              onPanUpdate: (details) =>
-                  updateDrag(details, ResizeDirection.right),
+            child: InkWell(
+              onTap: () {},
+              onHover: (value) {
+                setState(() {
+                  isHovering = value;
+                });
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.ease,
+                decoration: BoxDecoration(
+                  color: isHovering ? Colors.green : null,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: GestureDetector(
+                  onPanStart: (details) =>
+                      startDrag(details, ResizeDirection.right),
+                  onPanUpdate: (details) =>
+                      updateDrag(details, ResizeDirection.right),
+                ),
+              ),
             ),
           ),
           // 下
@@ -109,12 +129,28 @@ class _ResizerState extends ConsumerState<Resizer> {
             top: top + height - 20,
             left: left,
             height: 20,
-            width: width - 40,
-            child: GestureDetector(
-              onPanStart: (details) =>
-                  startDrag(details, ResizeDirection.bottom),
-              onPanUpdate: (details) =>
-                  updateDrag(details, ResizeDirection.bottom),
+            width: width - 20,
+            child: InkWell(
+              onTap: () {},
+              onHover: (value) {
+                setState(() {
+                  isHovering = value;
+                });
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.ease,
+                decoration: BoxDecoration(
+                  color: isHovering ? Colors.green : null,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: GestureDetector(
+                  onPanStart: (details) =>
+                      startDrag(details, ResizeDirection.bottom),
+                  onPanUpdate: (details) =>
+                      updateDrag(details, ResizeDirection.bottom),
+                ),
+              ),
             ),
           ),
           // 右下
@@ -123,11 +159,27 @@ class _ResizerState extends ConsumerState<Resizer> {
             left: left + width - 20,
             height: 20,
             width: 20,
-            child: GestureDetector(
-              onPanStart: (details) =>
-                  startDrag(details, ResizeDirection.bottomRight),
-              onPanUpdate: (details) =>
-                  updateDrag(details, ResizeDirection.bottomRight),
+            child: InkWell(
+              onTap: () {},
+              onHover: (value) {
+                setState(() {
+                  isHovering = value;
+                });
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.ease,
+                decoration: BoxDecoration(
+                  color: isHovering ? Colors.green : null,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: GestureDetector(
+                  onPanStart: (details) =>
+                      startDrag(details, ResizeDirection.bottomRight),
+                  onPanUpdate: (details) =>
+                      updateDrag(details, ResizeDirection.bottomRight),
+                ),
+              ),
             ),
           ),
         ],
@@ -206,8 +258,6 @@ class _ResizerState extends ConsumerState<Resizer> {
         initY = details.globalPosition.dy;
         break;
       default:
-      // initX = 0;
-      // initY = 0;
     }
   }
 }
