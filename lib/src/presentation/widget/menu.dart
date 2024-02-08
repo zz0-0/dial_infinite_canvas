@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aimed_infinite_canvas/src/provider.dart';
-import 'package:aimed_infinite_canvas/src/presentation/widget/detail_card.dart';
+import 'package:aimed_infinite_canvas/src/domain/model/node.dart';
+import 'package:aimed_infinite_canvas/src/domain/model/info_card.dart';
+import 'package:aimed_infinite_canvas/src/presentation/widget/info_card_widget.dart';
 
 class Menu extends ConsumerStatefulWidget {
   const Menu({super.key});
@@ -18,7 +20,7 @@ class _MenuState extends ConsumerState<Menu> {
       width: 100,
       child: Column(children: [
         IconButton(
-          onPressed: () => createDetailCard(ref),
+          onPressed: () => createInfoCardWidget(ref),
           icon: const Icon(Icons.add_box_outlined),
         ),
         IconButton(
@@ -37,37 +39,47 @@ class _MenuState extends ConsumerState<Menu> {
     );
   }
 
-  createDetailCard(WidgetRef ref) {
+  createInfoCardWidget(WidgetRef ref) {
     final GlobalKey key = GlobalKey();
+    final GlobalKey key1 = GlobalKey();
+    final GlobalKey key2 = GlobalKey();
     var positionWidget = LayoutId(
       id: key,
-      child: DetailCard(
+      child: InfoCardWidget(
         cardKey: key,
       ),
     );
 
-    var details = ref.read(detailCardListProvider);
+    var details = ref.read(infoCardWidgetListProvider);
     details.add(positionWidget);
 
     ref
-        .read(detailCardListProvider.notifier)
+        .read(infoCardWidgetListProvider.notifier)
         .update((state) => details.toList());
 
     var cardPositions = ref.read(cardPositionMapProvider);
-    cardPositions[key] = Offset.infinite;
+    cardPositions[key] = InfoCard(
+      key: key,
+      position: Offset.infinite,
+      height: ref.read(cardHeightProvider(key)),
+      width: ref.read(cardHeightProvider(key)),
+      inputNode: Node(key: key1, position: Offset.infinite),
+      outputNode: Node(key: key1, position: Offset.infinite),
+    );
+    // cardPositions[key] = Offset.infinite;
 
     ref.read(cardPositionMapProvider.notifier).update((state) {
-      state = Map.from(cardPositions);
+      state = cardPositions;
       return state;
     });
 
-    var nodePositions = ref.read(nodePositionMapProvider);
-    nodePositions[key] = Offset.infinite;
+    // var nodePositions = ref.read(nodePositionMapProvider);
+    // nodePositions[key] = Offset.infinite;
 
-    ref.read(nodePositionMapProvider.notifier).update((state) {
-      state = Map.from(nodePositions);
-      return state;
-    });
+    // ref.read(nodePositionMapProvider.notifier).update((state) {
+    //   state = Map.from(nodePositions);
+    //   return state;
+    // });
   }
 
   resetCanvasZoomLevel() {

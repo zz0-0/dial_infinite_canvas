@@ -62,14 +62,6 @@ class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
           .read(subdivisionsProvider.notifier)
           .update((state) => widget.subdivisions!);
     }
-    if (widget.cardHeight != null) {
-      ref
-          .read(cardHeightProvider.notifier)
-          .update((state) => widget.cardHeight!);
-    }
-    if (widget.cardWidth != null) {
-      ref.read(cardWidthProvider.notifier).update((state) => widget.cardWidth!);
-    }
   }
 
   @override

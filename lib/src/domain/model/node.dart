@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 class Node {
   Node({
     required this.key,
-    required this.x,
-    required this.y,
+    required this.position,
   });
 
-  final LocalKey key;
-  final double x;
-  final double y;
+  final GlobalKey key;
+  final Offset position;
 }

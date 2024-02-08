@@ -3,9 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aimed_infinite_canvas/src/provider.dart';
 
 enum ResizeDirection {
-  // top("TOP"),
   bottom("BOTTOM"),
-  // left("LEFT"),
   right("RIGHT"),
   bottomRight("BOTTOMRIGHT");
 
@@ -16,85 +14,42 @@ enum ResizeDirection {
 class Resizer extends ConsumerStatefulWidget {
   const Resizer({
     super.key,
+    required this.cardKey,
     required this.child,
   });
 
+  final GlobalKey cardKey;
   final Widget child;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ResizerState();
 }
 
-const ballDiameter = 30.0;
-
 class _ResizerState extends ConsumerState<Resizer> {
   double top = 0.0, left = 0.0, bottom = 0.0, right = 0.0;
   late double width, height;
-  bool dragTop = false, dragBottom = false, dragLeft = false, dragRight = false;
   double initX = 0.0, initY = 0.0;
+  bool isHovering = false;
 
   @override
   Widget build(BuildContext context) {
-    width = ref.watch(cardWidthProvider);
-    height = ref.watch(cardHeightProvider);
+    width = ref.watch(cardWidthProvider(widget.cardKey));
+    height = ref.watch(cardHeightProvider(widget.cardKey));
 
-    // bottom = height - 10;
-    bool isHovering = false;
     return SizedBox(
       width: width,
       height: height,
       child: Stack(
         children: [
-          // if (dragBottom ||
-          //     dragRight ||
-          //     !(dragTop && dragBottom && dragLeft && dragRight))
           Positioned(
             top: top,
             left: left,
-            // right: right,
-            // bottom: bottom,
             child: SizedBox(
               width: width,
               height: height,
               child: widget.child,
             ),
           ),
-          // if (dragTop || dragLeft)
-          // Positioned(
-          //   bottom: bottom,
-          //   right: right,
-          //   child: SizedBox(
-          //     width: width,
-          //     height: height,
-          //     child: widget.child,
-          //   ),
-          // ),
-          // 左
-          // Positioned(
-          //   top: top,
-          //   left: left,
-          //   height: height,
-          //   width: 20,
-          //   child: GestureDetector(
-          //     child: Text("qqqqqq"),
-          //     onPanStart: (details) => startDrag(details, ResizeDirection.left),
-          //     onPanUpdate: (details) =>
-          //         updateDrag(details, ResizeDirection.left),
-          //   ),
-          // ),
-          // 上
-          // Positioned(
-          //   top: top,
-          //   left: left,
-          //   height: 20,
-          //   width: width,
-          //   child: GestureDetector(
-          //     child: Text("wwwwww"),
-          //     onPanStart: (details) => startDrag(details, ResizeDirection.top),
-          //     onPanUpdate: (details) =>
-          //         updateDrag(details, ResizeDirection.top),
-          //   ),
-          // ),
           // 右
           Positioned(
             top: top,
@@ -102,6 +57,7 @@ class _ResizerState extends ConsumerState<Resizer> {
             height: height - 20,
             width: 20,
             child: InkWell(
+              mouseCursor: SystemMouseCursors.resizeRight,
               onTap: () {},
               onHover: (value) {
                 setState(() {
@@ -131,6 +87,7 @@ class _ResizerState extends ConsumerState<Resizer> {
             height: 20,
             width: width - 20,
             child: InkWell(
+              mouseCursor: SystemMouseCursors.resizeDown,
               onTap: () {},
               onHover: (value) {
                 setState(() {
@@ -160,6 +117,7 @@ class _ResizerState extends ConsumerState<Resizer> {
             height: 20,
             width: 20,
             child: InkWell(
+              mouseCursor: SystemMouseCursors.resizeDownRight,
               onTap: () {},
               onHover: (value) {
                 setState(() {
@@ -190,59 +148,24 @@ class _ResizerState extends ConsumerState<Resizer> {
   void startDrag(DragStartDetails details, ResizeDirection direction) {
     initX = details.globalPosition.dx;
     initY = details.globalPosition.dy;
-    // switch (direction) {
-    // case ResizeDirection.top:
-    //   dragTop = true;
-    //   print(initX);
-    //   break;
-    // case ResizeDirection.bottom:
-    //   dragBottom = true;
-    //   break;
-    // case ResizeDirection.left:
-    //   dragLeft = true;
-    //   break;
-    // case ResizeDirection.right:
-    //   dragRight = true;
-    //   break;
-    // default:
-    // }
   }
 
   void updateDrag(DragUpdateDetails details, ResizeDirection direction) {
     switch (direction) {
-      // case ResizeDirection.top:
-      //   var dy = details.globalPosition.dy - initY;
-      //   var newHeight = height + dy;
-      //   print("init:$initY");
-      //   print("after:$dy");
-      //   setState(() {
-      //     height = newHeight;
-      //     // top = top + newHeight;
-      //   });
-      //   initY = details.globalPosition.dy;
-      //   break;
       case ResizeDirection.bottom:
         var dy = details.globalPosition.dy - initY;
         var newHeight = height + dy;
-        setState(() {
-          height = newHeight;
-        });
+        ref
+            .read(cardHeightProvider(widget.cardKey).notifier)
+            .update((state) => newHeight);
         initY = details.globalPosition.dy;
         break;
-      // case ResizeDirection.left:
-      //   var dx = details.globalPosition.dx - initX;
-      //   var newWidth = width + dx;
-      //   setState(() {
-      //     width = newWidth > 0 ? newWidth : 0;
-      //   });
-      //   initX = details.globalPosition.dx;
-      //   break;
       case ResizeDirection.right:
         var dx = details.globalPosition.dx - initX;
         var newWidth = width + dx;
-        setState(() {
-          width = newWidth;
-        });
+        ref
+            .read(cardWidthProvider(widget.cardKey).notifier)
+            .update((state) => newWidth);
         initX = details.globalPosition.dx;
         break;
       case ResizeDirection.bottomRight:
@@ -250,10 +173,12 @@ class _ResizerState extends ConsumerState<Resizer> {
         var dy = details.globalPosition.dy - initY;
         var newWidth = width + dx;
         var newHeight = height + dy;
-        setState(() {
-          width = newWidth;
-          height = newHeight;
-        });
+        ref
+            .read(cardHeightProvider(widget.cardKey).notifier)
+            .update((state) => newHeight);
+        ref
+            .read(cardWidthProvider(widget.cardKey).notifier)
+            .update((state) => newWidth);
         initX = details.globalPosition.dx;
         initY = details.globalPosition.dy;
         break;

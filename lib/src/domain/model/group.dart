@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:aimed_infinite_canvas/src/domain/model/detail_card.dart';
+import 'package:aimed_infinite_canvas/src/domain/model/info_card.dart';
 
 class Group {
   Group({
@@ -8,5 +8,5 @@ class Group {
   });
 
   final LocalKey key;
-  final List<DetailCard> cards;
+  final List<InfoCard> cards;
 }

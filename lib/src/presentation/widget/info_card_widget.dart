@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aimed_infinite_canvas/src/provider.dart';
 import 'package:aimed_infinite_canvas/src/presentation/widget/resizer.dart';
 
-class DetailCard extends ConsumerStatefulWidget {
+class InfoCardWidget extends ConsumerStatefulWidget {
   final GlobalKey cardKey;
   final Function? onCardDragBegin;
   final Function? onCardDragging;
@@ -15,7 +15,7 @@ class DetailCard extends ConsumerStatefulWidget {
   final Function? onCardMouseLeave;
   final Function? onCardMouseMoveInside;
 
-  const DetailCard({
+  const InfoCardWidget({
     this.onCardDragBegin,
     this.onCardDragging,
     this.onCardDragEnd,
@@ -30,7 +30,7 @@ class DetailCard extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _DetailCardState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _InfoCardWidgetState();
 }
 
 enum CardType {
@@ -41,7 +41,7 @@ enum CardType {
   final String label;
 }
 
-class _DetailCardState extends ConsumerState<DetailCard> {
+class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
   @override
   Widget build(BuildContext context) {
     var notSetStarNode = ref.watch(notSetStartNodeProvider);
@@ -57,13 +57,13 @@ class _DetailCardState extends ConsumerState<DetailCard> {
               },
             ).toList(),
             onSelected: (value) => ref
-                .read(cardTypeProvider.notifier)
+                .read(cardTypeProvider(widget.cardKey).notifier)
                 .update((state) => state = value!),
           ),
           SizedBox(
             width: 100,
             height: 100,
-            child: setChildByType(),
+            child: setChildByType(widget.cardKey),
           )
         ],
       ),
@@ -71,11 +71,12 @@ class _DetailCardState extends ConsumerState<DetailCard> {
     return Stack(
       children: [
         Resizer(
+          cardKey: widget.cardKey,
           child: Draggable(
             feedback: sizedBox,
             onDragEnd: (details) {
               var positions = ref.read(cardPositionMapProvider);
-              positions[widget.cardKey] = details.offset;
+              positions[widget.cardKey]?.position = details.offset;
 
               ref.read(cardPositionMapProvider.notifier).update((state) {
                 state = Map.from(positions);
@@ -88,30 +89,33 @@ class _DetailCardState extends ConsumerState<DetailCard> {
         Positioned(
           bottom: 100,
           right: 0,
-          child: GestureDetector(
-            onTapDown: (details) {
-              if (notSetStarNode) {
-                ref
-                    .read(startKeyProvider.notifier)
-                    .update((state) => widget.cardKey);
-                ref
-                    .read(notSetStartNodeProvider.notifier)
-                    .update((state) => false);
-              } else {
-                ref
-                    .read(endKeyProvider.notifier)
-                    .update((state) => widget.cardKey);
-                ref
-                    .read(notSetStartNodeProvider.notifier)
-                    .update((state) => true);
-              }
-            },
-            child: Container(
-              width: 10,
-              height: 10,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
+          child: InkWell(
+            mouseCursor: SystemMouseCursors.alias,
+            child: GestureDetector(
+              onTapDown: (details) {
+                if (notSetStarNode) {
+                  ref
+                      .read(startKeyProvider.notifier)
+                      .update((state) => widget.cardKey);
+                  ref
+                      .read(notSetStartNodeProvider.notifier)
+                      .update((state) => false);
+                } else {
+                  ref
+                      .read(endKeyProvider.notifier)
+                      .update((state) => widget.cardKey);
+                  ref
+                      .read(notSetStartNodeProvider.notifier)
+                      .update((state) => true);
+                }
+              },
+              child: Container(
+                width: 10,
+                height: 10,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
               ),
             ),
           ),
@@ -120,8 +124,8 @@ class _DetailCardState extends ConsumerState<DetailCard> {
     );
   }
 
-  setChildByType() {
-    switch (ref.watch(cardTypeProvider)) {
+  setChildByType(GlobalKey key) {
+    switch (ref.watch(cardTypeProvider(key))) {
       case CardType.simple:
         return const Row(
           children: [
