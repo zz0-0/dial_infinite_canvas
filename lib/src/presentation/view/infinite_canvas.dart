@@ -15,6 +15,8 @@ class InfiniteCanvas extends ConsumerStatefulWidget {
     this.subdivisions,
     this.cardHeight,
     this.cardWidth,
+    this.groupHeight,
+    this.groupWidth,
   });
 
   final double? menuLeftPosition;
@@ -25,6 +27,8 @@ class InfiniteCanvas extends ConsumerStatefulWidget {
   final int? subdivisions;
   final double? cardHeight;
   final double? cardWidth;
+  final double? groupHeight;
+  final double? groupWidth;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _InfiniteCanvasState();

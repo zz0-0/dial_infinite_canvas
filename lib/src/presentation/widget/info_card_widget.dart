@@ -72,6 +72,7 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
       children: [
         Resizer(
           cardKey: widget.cardKey,
+          type: ResizeType.card,
           child: Draggable(
             feedback: sizedBox,
             onDragEnd: (details) {

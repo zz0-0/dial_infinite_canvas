@@ -1,6 +1,6 @@
 name: dial_infinite_canvas
 description: "An infinite canvas package written in Dart"
-version: 0.0.1
+version: 0.7.0
 homepage:
 
 environment:
@@ -8,6 +8,7 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
+  dotted_border: ^2.1.0
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.4.9

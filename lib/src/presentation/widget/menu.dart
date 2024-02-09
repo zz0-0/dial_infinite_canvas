@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dial_infinite_canvas/src/provider.dart';
 import 'package:dial_infinite_canvas/src/domain/model/node.dart';
+import 'package:dial_infinite_canvas/src/domain/model/group.dart';
 import 'package:dial_infinite_canvas/src/domain/model/info_card.dart';
+import 'package:dial_infinite_canvas/src/presentation/widget/group_widget.dart';
 import 'package:dial_infinite_canvas/src/presentation/widget/info_card_widget.dart';
 
 class Menu extends ConsumerStatefulWidget {
@@ -19,6 +21,10 @@ class _MenuState extends ConsumerState<Menu> {
       height: 200,
       width: 100,
       child: Column(children: [
+        IconButton(
+          onPressed: () => createGroupWidget(ref),
+          icon: const Icon(Icons.add_home_outlined),
+        ),
         IconButton(
           onPressed: () => createInfoCardWidget(ref),
           icon: const Icon(Icons.add_box_outlined),
@@ -66,20 +72,41 @@ class _MenuState extends ConsumerState<Menu> {
       inputNode: Node(key: key1, position: Offset.infinite),
       outputNode: Node(key: key2, position: Offset.infinite),
     );
-    // cardPositions[key] = Offset.infinite;
 
     ref.read(cardPositionMapProvider.notifier).update((state) {
       state = cardPositions;
       return state;
     });
+  }
 
-    // var nodePositions = ref.read(nodePositionMapProvider);
-    // nodePositions[key] = Offset.infinite;
+  createGroupWidget(WidgetRef ref) {
+    final GlobalKey key = GlobalKey();
 
-    // ref.read(nodePositionMapProvider.notifier).update((state) {
-    //   state = Map.from(nodePositions);
-    //   return state;
-    // });
+    var positionWidget = LayoutId(
+      id: key,
+      child: GroupWidget(
+        groupKey: key,
+      ),
+    );
+
+    var details = ref.read(groupWidgetListProvider);
+    details.add(positionWidget);
+
+    ref
+        .read(groupWidgetListProvider.notifier)
+        .update((state) => details.toList());
+
+    var groupPositions = ref.read(groupPositionMapProvider);
+    groupPositions[key] = Group(
+      key: key,
+      position: Offset.infinite,
+      cards: {},
+    );
+
+    ref.read(groupPositionMapProvider.notifier).update((state) {
+      state = groupPositions;
+      return state;
+    });
   }
 
   resetCanvasZoomLevel() {

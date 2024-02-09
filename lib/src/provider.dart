@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dial_infinite_canvas/src/domain/model/edge.dart';
+import 'package:dial_infinite_canvas/src/domain/model/group.dart';
 import 'package:dial_infinite_canvas/src/domain/model/info_card.dart';
 import 'package:dial_infinite_canvas/src/presentation/widget/info_card_widget.dart';
 import 'package:dial_infinite_canvas/src/presentation/widget/interactive_canvas.dart';
@@ -18,6 +19,11 @@ final cardHeightProvider =
     StateProvider.family<double, GlobalKey>((ref, key) => 200);
 final cardWidthProvider =
     StateProvider.family<double, GlobalKey>((ref, id) => 200);
+
+final groupHeightProvider =
+    StateProvider.family<double, GlobalKey>((ref, key) => 600);
+final groupWidthProvider =
+    StateProvider.family<double, GlobalKey>((ref, id) => 600);
 
 final startKeyProvider = StateProvider<GlobalKey?>((ref) => null);
 final endKeyProvider = StateProvider<GlobalKey?>((ref) => null);
@@ -49,3 +55,7 @@ final transformationControllerProvider = Provider((ref) {
 });
 final cardTypeProvider =
     StateProvider.family<CardType, GlobalKey>((ref, id) => CardType.simple);
+
+final groupWidgetListProvider = StateProvider<List<LayoutId>>((ref) => []);
+final groupPositionMapProvider =
+    StateProvider<Map<GlobalKey, Group>>((ref) => {});

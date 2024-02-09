@@ -11,14 +11,24 @@ enum ResizeDirection {
   final String label;
 }
 
+enum ResizeType {
+  card("CARD"),
+  group("GROUP");
+
+  const ResizeType(this.label);
+  final String label;
+}
+
 class Resizer extends ConsumerStatefulWidget {
   const Resizer({
     super.key,
     required this.cardKey,
+    required this.type,
     required this.child,
   });
 
   final GlobalKey cardKey;
+  final ResizeType type;
   final Widget child;
 
   @override
@@ -33,8 +43,17 @@ class _ResizerState extends ConsumerState<Resizer> {
 
   @override
   Widget build(BuildContext context) {
-    width = ref.watch(cardWidthProvider(widget.cardKey));
-    height = ref.watch(cardHeightProvider(widget.cardKey));
+    switch (widget.type) {
+      case ResizeType.card:
+        width = ref.watch(cardWidthProvider(widget.cardKey));
+        height = ref.watch(cardHeightProvider(widget.cardKey));
+        break;
+      case ResizeType.group:
+        width = ref.watch(groupWidthProvider(widget.cardKey));
+        height = ref.watch(groupHeightProvider(widget.cardKey));
+        break;
+      default:
+    }
 
     return SizedBox(
       width: width,
