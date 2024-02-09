@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aimed_infinite_canvas/src/provider.dart';
+import 'package:aimed_infinite_canvas/src/domain/model/edge.dart';
 import 'package:aimed_infinite_canvas/src/domain/model/info_card.dart';
 import 'package:aimed_infinite_canvas/src/presentation/widget/background.dart';
 
@@ -78,14 +79,36 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
 
   Future<void> executeAfterPaint() async {
     await Future.delayed(Duration.zero);
+
+    var sourceCard = ref.read(startKeyProvider);
+    var targetCard = ref.read(endKeyProvider);
+    var sourceNode = ref.read(cardPositionMapProvider)[sourceCard]?.outputNode;
+    var targetNode = ref.read(cardPositionMapProvider)[targetCard]?.inputNode;
+
+    var connectedNodes = ref.read(connectedNodeListProvider);
+    connectedNodes.add(
+      Edge(
+        sourceCardKey: sourceCard!,
+        targetCardKey: targetCard!,
+        sourceNode: sourceNode!,
+        targetNode: targetNode!,
+      ),
+    );
+    ref.read(connectedNodeListProvider.notifier).update((state) {
+      state = connectedNodes;
+      return state;
+    });
+
+    ref.read(startKeyProvider.notifier).update((state) => null);
+    ref.read(endKeyProvider.notifier).update((state) => null);
   }
 }
 
 class EdgePainter extends CustomPainter {
-  List<(GlobalKey, GlobalKey)> node;
+  List<Edge> node;
   GlobalKey? start;
   GlobalKey? end;
-  // Map<GlobalKey, Offset> nodePositions;
+  Map<GlobalKey, InfoCard> cardPositions;
   double mouseX;
   double mouseY;
 
@@ -93,7 +116,7 @@ class EdgePainter extends CustomPainter {
     required this.node,
     required this.start,
     required this.end,
-    // required this.nodePositions,
+    required this.cardPositions,
     required this.mouseX,
     required this.mouseY,
   });
@@ -102,28 +125,28 @@ class EdgePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = Colors.blue;
 
-    // if (node.isNotEmpty) {
-    //   for (var i in node) {
-    //     if (nodePositions[i.$1] != Offset.infinite &&
-    //         nodePositions[i.$2] != Offset.infinite) {
-    //       canvas.drawLine(nodePositions[i.$1]!, nodePositions[i.$2]!, paint);
-    //     }
-    //   }
-    // }
+    if (node.isNotEmpty) {
+      for (var n in node) {
+        var source = cardPositions[n.sourceCardKey]?.outputNode.position;
+        var target = cardPositions[n.targetCardKey]?.inputNode.position;
+        if (source != Offset.infinite && target != Offset.infinite) {
+          canvas.drawLine(source!, target!, paint);
+        }
+      }
+    }
 
-    // if (start != null) {
-    //   if (end != null) {
-    //     if (nodePositions[start] != Offset.infinite &&
-    //         nodePositions[end] != Offset.infinite) {
-    //       canvas.drawLine(nodePositions[start]!, nodePositions[end]!, paint);
-    //       node.add((start!, end!));
-    //       start = null;
-    //       end = null;
-    //     }
-    //   } else {
-    //     canvas.drawLine(nodePositions[start]!, Offset(mouseX, mouseY), paint);
-    //   }
-    // }
+    if (start != null) {
+      if (end != null) {
+        var source = cardPositions[start]?.outputNode.position;
+        var target = cardPositions[end]?.outputNode.position;
+        if (source != Offset.infinite && target != Offset.infinite) {
+          canvas.drawLine(source!, target!, paint);
+        }
+      } else {
+        var source = cardPositions[start]?.outputNode.position;
+        canvas.drawLine(source!, Offset(mouseX, mouseY), paint);
+      }
+    }
   }
 
   @override
@@ -158,6 +181,10 @@ class InfoCardWidgetWidgetsDelegate extends MultiChildLayoutDelegate {
         } else {
           positionChild(key, childPosition);
           cardPositions[key]?.position = childPosition;
+          cardPositions[key]?.inputNode.position =
+              childPosition + const Offset(0, 100);
+          cardPositions[key]?.outputNode.position =
+              childPosition + const Offset(200, 100);
           cardPositionsClone[key] = cardPositions[key]!;
           childPosition += Offset(0, currentSize.height + 5);
         }

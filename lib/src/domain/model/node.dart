@@ -7,5 +7,5 @@ class Node {
   });
 
   final GlobalKey key;
-  final Offset position;
+  Offset position;
 }

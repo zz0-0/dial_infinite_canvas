@@ -64,7 +64,7 @@ class _MenuState extends ConsumerState<Menu> {
       height: ref.read(cardHeightProvider(key)),
       width: ref.read(cardHeightProvider(key)),
       inputNode: Node(key: key1, position: Offset.infinite),
-      outputNode: Node(key: key1, position: Offset.infinite),
+      outputNode: Node(key: key2, position: Offset.infinite),
     );
     // cardPositions[key] = Offset.infinite;
 

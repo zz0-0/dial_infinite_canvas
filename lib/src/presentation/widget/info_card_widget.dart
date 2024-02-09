@@ -78,6 +78,11 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
               var positions = ref.read(cardPositionMapProvider);
               positions[widget.cardKey]?.position = details.offset;
 
+              positions[widget.cardKey]?.inputNode.position =
+                  details.offset + const Offset(0, 100);
+              positions[widget.cardKey]?.outputNode.position =
+                  details.offset + const Offset(200, 100);
+
               ref.read(cardPositionMapProvider.notifier).update((state) {
                 state = Map.from(positions);
                 return state;
@@ -87,7 +92,41 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
           ),
         ),
         Positioned(
-          bottom: 100,
+          top: 100,
+          left: 0,
+          child: InkWell(
+            mouseCursor: SystemMouseCursors.alias,
+            child: GestureDetector(
+              onTapDown: (details) {
+                if (notSetStarNode) {
+                  ref
+                      .read(startKeyProvider.notifier)
+                      .update((state) => widget.cardKey);
+                  ref
+                      .read(notSetStartNodeProvider.notifier)
+                      .update((state) => false);
+                } else {
+                  ref
+                      .read(endKeyProvider.notifier)
+                      .update((state) => widget.cardKey);
+                  ref
+                      .read(notSetStartNodeProvider.notifier)
+                      .update((state) => true);
+                }
+              },
+              child: Container(
+                width: 10,
+                height: 10,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          top: 100,
           right: 0,
           child: InkWell(
             mouseCursor: SystemMouseCursors.alias,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:aimed_infinite_canvas/src/domain/model/edge.dart';
 import 'package:aimed_infinite_canvas/src/domain/model/info_card.dart';
 import 'package:aimed_infinite_canvas/src/presentation/widget/info_card_widget.dart';
 import 'package:aimed_infinite_canvas/src/presentation/widget/interactive_canvas.dart';
@@ -21,13 +22,10 @@ final cardWidthProvider =
 final startKeyProvider = StateProvider<GlobalKey?>((ref) => null);
 final endKeyProvider = StateProvider<GlobalKey?>((ref) => null);
 final notSetStartNodeProvider = StateProvider<bool>((ref) => true);
-final connectedNodeListProvider =
-    StateProvider<List<(GlobalKey, GlobalKey)>>((ref) => []);
+final connectedNodeListProvider = StateProvider<List<Edge>>((ref) => []);
 final infoCardWidgetListProvider = StateProvider<List<LayoutId>>((ref) => []);
 final cardPositionMapProvider =
     StateProvider<Map<GlobalKey, InfoCard>>((ref) => {});
-// final nodePositionMapProvider =
-//     StateProvider<Map<GlobalKey, Offset>>((ref) => {});
 final mouseXProvider = StateProvider((ref) => 0.0);
 final mouseYProvider = StateProvider((ref) => 0.0);
 final edgePainterProvider = Provider(
@@ -35,7 +33,7 @@ final edgePainterProvider = Provider(
     node: ref.watch(connectedNodeListProvider),
     start: ref.watch(startKeyProvider),
     end: ref.watch(endKeyProvider),
-    // nodePositions: ref.watch(nodePositionMapProvider),
+    cardPositions: ref.watch(cardPositionMapProvider),
     mouseX: ref.watch(mouseXProvider),
     mouseY: ref.watch(mouseYProvider),
   ),
