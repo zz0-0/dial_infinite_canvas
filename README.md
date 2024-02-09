@@ -1,6 +1,6 @@
 # Dial_infinite_canvas
 
-This is a infinite canvas package written in Dart.
+This is an infinite canvas package written in Dart.
 
 ## Tech Stack
 
@@ -36,9 +36,9 @@ Run the project
 ## Features
 
 - Zoom in, zoom out the canvas with mouse scrolling
-- Pan left, pan right the canvas with left mouse pressing
+- Pan left, pan right the canvas with the left mouse pressing
 - Add cards to the canvas
-- Connect cards' input nodes and output nodes with mouse clicking
+- Connect cards' input nodes and output nodes with mouse-clicking
 
 ## Authors
 
