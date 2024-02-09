@@ -9,13 +9,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "64.0.0"
-  aimed_infinite_canvas:
-    dependency: "direct main"
-    description:
-      path: ".."
-      relative: true
-    source: path
-    version: "0.0.1"
   analyzer:
     dependency: transitive
     description:
@@ -168,14 +161,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.3.4"
-  drift:
-    dependency: transitive
+  dial_infinite_canvas:
+    dependency: "direct main"
     description:
-      name: drift
-      sha256: b50a8342c6ddf05be53bda1d246404cbad101b64dc73e8d6d1ac1090d119b4e2
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "2.15.0"
+      path: ".."
+      relative: true
+    source: path
+    version: "0.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -250,6 +242,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.2"
+  hive:
+    dependency: transitive
+    description:
+      name: hive
+      sha256: "8dcf6db979d7933da8217edcec84e9df1bdb4e4edc7fc77dbd5aa74356d6d941"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.2.3"
   hotreloader:
     dependency: transitive
     description:
@@ -258,6 +258,22 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.1.0"
+  isar:
+    dependency: transitive
+    description:
+      name: isar
+      sha256: ebf74d87c400bd9f7da14acb31932b50c2407edbbd40930da3a6c2a8143f85a8
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "4.0.0-dev.14"
+  isar_flutter_libs:
+    dependency: transitive
+    description:
+      name: isar_flutter_libs
+      sha256: "04a3f4035e213ddb6e78d0132a7c80296a085c2088c2a761b4a42ee5add36983"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "4.0.0-dev.14"
   js:
     dependency: transitive
     description:
@@ -487,22 +503,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "7.0.0"
-  sqlite3:
-    dependency: transitive
-    description:
-      name: sqlite3
-      sha256: c4a4c5a4b2a32e2d0f6837b33d7c91a67903891a5b7dbe706cf4b1f6b0c798c5
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "2.3.0"
-  sqlite3_flutter_libs:
-    dependency: transitive
-    description:
-      name: sqlite3_flutter_libs
-      sha256: d6c31c8511c441d1f12f20b607343df1afe4eddf24a1cf85021677c8eea26060
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.5.20"
   stack_trace:
     dependency: transitive
     description:

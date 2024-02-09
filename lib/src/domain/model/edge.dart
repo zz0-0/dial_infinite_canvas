@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:aimed_infinite_canvas/src/domain/model/node.dart';
+import 'package:dial_infinite_canvas/src/domain/model/node.dart';
 
 class Edge {
   Edge({

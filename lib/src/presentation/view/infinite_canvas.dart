@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:aimed_infinite_canvas/src/provider.dart';
-import 'package:aimed_infinite_canvas/src/presentation/widget/menu.dart';
-import 'package:aimed_infinite_canvas/src/presentation/widget/interactive_canvas.dart';
+import 'package:dial_infinite_canvas/src/provider.dart';
+import 'package:dial_infinite_canvas/src/presentation/widget/menu.dart';
+import 'package:dial_infinite_canvas/src/presentation/widget/interactive_canvas.dart';
 
 class InfiniteCanvas extends ConsumerStatefulWidget {
   const InfiniteCanvas({

@@ -27,7 +27,7 @@ dependencies:
   flutter_riverpod: ^2.4.9
   riverpod_annotation: ^2.3.3
   vector_math: ^2.1.4
-  aimed_infinite_canvas:
+  dial_infinite_canvas:
     path: ..
 
 dev_dependencies:

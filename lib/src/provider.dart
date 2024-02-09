@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:aimed_infinite_canvas/src/domain/model/edge.dart';
-import 'package:aimed_infinite_canvas/src/domain/model/info_card.dart';
-import 'package:aimed_infinite_canvas/src/presentation/widget/info_card_widget.dart';
-import 'package:aimed_infinite_canvas/src/presentation/widget/interactive_canvas.dart';
+import 'package:dial_infinite_canvas/src/domain/model/edge.dart';
+import 'package:dial_infinite_canvas/src/domain/model/info_card.dart';
+import 'package:dial_infinite_canvas/src/presentation/widget/info_card_widget.dart';
+import 'package:dial_infinite_canvas/src/presentation/widget/interactive_canvas.dart';
 
 final menuLeftPositionProvider = StateProvider<double>((ref) => 10);
 final menuBottomPositionProvider = StateProvider<double>((ref) => 10);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:aimed_infinite_canvas/src/provider.dart';
+import 'package:dial_infinite_canvas/src/provider.dart';
 
 enum ResizeDirection {
   bottom("BOTTOM"),

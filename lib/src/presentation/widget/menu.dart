@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:aimed_infinite_canvas/src/provider.dart';
-import 'package:aimed_infinite_canvas/src/domain/model/node.dart';
-import 'package:aimed_infinite_canvas/src/domain/model/info_card.dart';
-import 'package:aimed_infinite_canvas/src/presentation/widget/info_card_widget.dart';
+import 'package:dial_infinite_canvas/src/provider.dart';
+import 'package:dial_infinite_canvas/src/domain/model/node.dart';
+import 'package:dial_infinite_canvas/src/domain/model/info_card.dart';
+import 'package:dial_infinite_canvas/src/presentation/widget/info_card_widget.dart';
 
 class Menu extends ConsumerStatefulWidget {
   const Menu({super.key});
