@@ -1,16 +1,49 @@
-- [ ] card
-- [ ] edge
-- [ ] group
-- [ ] mouse hover line
-- [ ]
+# Dial_infinite_canvas
 
-## workflow
+This is a infinite canvas package written in Dart.
 
-1. 判断
-2. 循环
-3. 合并
-4. 等待
-5. 运行
-6. 数据源
-7. llm
-8. api
+## Tech Stack
+
+**UI**: Flutter/Dart
+
+**State Management:** Riverpod
+
+## Run Locally
+
+Clone the project
+
+```bash
+git clone https://github.com/zz0-0/dial-infinite-canvas
+```
+
+Go to the project directory
+
+```bash
+cd dial_infinite_canvas
+```
+
+Install dependencies
+
+```bash
+flutter pub get
+```
+
+Run the project
+
+- Option 1: VSCode
+  - cd example/lib, click Run in the main.dart
+
+## Features
+
+- Zoom in, zoom out the canvas with mouse scrolling
+- Pan left, pan right the canvas with left mouse pressing
+- Add cards to the canvas
+- Connect cards' input nodes and output nodes with mouse clicking
+
+## Authors
+
+- [@zz0-0](https://github.com/zz0-0)
+
+## Contributing
+
+Contributions are always welcome! Feel free to add or change anything in the project.
