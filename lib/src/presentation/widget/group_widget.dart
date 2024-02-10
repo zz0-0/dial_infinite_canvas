@@ -36,16 +36,20 @@ class _GroupWidgetState extends ConsumerState<GroupWidget> {
       child: Draggable(
         feedback: dottedBorder,
         onDragEnd: (details) {
-          var positions = ref.read(groupPositionMapProvider);
-          positions[widget.groupKey]?.position = details.offset;
-
-          ref.read(groupPositionMapProvider.notifier).update((state) {
-            state = Map.from(positions);
-            return state;
-          });
+          updateGroupPosition(details);
         },
         child: dottedBorder,
       ),
     );
+  }
+
+  void updateGroupPosition(DraggableDetails details) {
+    var positions = ref.read(groupPositionMapProvider);
+    positions[widget.groupKey]?.position = details.offset;
+
+    ref.read(groupPositionMapProvider.notifier).update((state) {
+      state = Map.from(positions);
+      return state;
+    });
   }
 }

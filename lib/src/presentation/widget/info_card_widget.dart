@@ -1,6 +1,8 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dial_infinite_canvas/src/provider.dart';
+import 'package:dial_infinite_canvas/src/domain/model/overlap.dart';
 import 'package:dial_infinite_canvas/src/presentation/widget/resizer.dart';
 
 class InfoCardWidget extends ConsumerStatefulWidget {
@@ -75,19 +77,11 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
           type: ResizeType.card,
           child: Draggable(
             feedback: sizedBox,
+            onDragUpdate: (details) {
+              detectOverlapping(details);
+            },
             onDragEnd: (details) {
-              var positions = ref.read(cardPositionMapProvider);
-              positions[widget.cardKey]?.position = details.offset;
-
-              positions[widget.cardKey]?.inputNode.position =
-                  details.offset + const Offset(0, 100);
-              positions[widget.cardKey]?.outputNode.position =
-                  details.offset + const Offset(200, 100);
-
-              ref.read(cardPositionMapProvider.notifier).update((state) {
-                state = Map.from(positions);
-                return state;
-              });
+              updateCardPosition(details);
             },
             child: sizedBox,
           ),
@@ -99,21 +93,7 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
             mouseCursor: SystemMouseCursors.alias,
             child: GestureDetector(
               onTapDown: (details) {
-                if (notSetStarNode) {
-                  ref
-                      .read(startKeyProvider.notifier)
-                      .update((state) => widget.cardKey);
-                  ref
-                      .read(notSetStartNodeProvider.notifier)
-                      .update((state) => false);
-                } else {
-                  ref
-                      .read(endKeyProvider.notifier)
-                      .update((state) => widget.cardKey);
-                  ref
-                      .read(notSetStartNodeProvider.notifier)
-                      .update((state) => true);
-                }
+                updateNodeKey(notSetStarNode);
               },
               child: Container(
                 width: 10,
@@ -133,21 +113,7 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
             mouseCursor: SystemMouseCursors.alias,
             child: GestureDetector(
               onTapDown: (details) {
-                if (notSetStarNode) {
-                  ref
-                      .read(startKeyProvider.notifier)
-                      .update((state) => widget.cardKey);
-                  ref
-                      .read(notSetStartNodeProvider.notifier)
-                      .update((state) => false);
-                } else {
-                  ref
-                      .read(endKeyProvider.notifier)
-                      .update((state) => widget.cardKey);
-                  ref
-                      .read(notSetStartNodeProvider.notifier)
-                      .update((state) => true);
-                }
+                updateNodeKey(notSetStarNode);
               },
               child: Container(
                 width: 10,
@@ -164,6 +130,59 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
     );
   }
 
+  void detectOverlapping(DragUpdateDetails details) {
+    // var box =
+    //     widget.cardKey.currentState?.context.findRenderObject()! as RenderBox;
+    Offset cardTopLeft = details.globalPosition;
+    Offset cardBottomRight = cardTopLeft +
+        Offset(ref.read(cardWidthProvider(widget.cardKey)),
+            ref.read(cardHeightProvider(widget.cardKey)));
+    var groups = ref.read(groupPositionMapProvider);
+    for (var key in groups.keys) {
+      var groupTopLeft = groups[key]?.position;
+      var groupBottomRight = groupTopLeft! +
+          Offset(ref.read(groupWidthProvider(key)),
+              ref.read(groupHeightProvider(key)));
+      var overlap = getOverlapPercent(
+          cardTopLeft, cardBottomRight, groupTopLeft, groupBottomRight);
+      var x = overlap.xPer;
+      var y = overlap.yPer;
+      if (x == 1 && y == 1) {
+        ref.read(groupPositionMapProvider.notifier).update((state) {
+          groups[key]?.cards[widget.cardKey] =
+              ref.read(cardPositionMapProvider)[widget.cardKey]!;
+          state = groups;
+          return state;
+        });
+      }
+    }
+  }
+
+  void updateNodeKey(bool notSetStarNode) {
+    if (notSetStarNode) {
+      ref.read(startKeyProvider.notifier).update((state) => widget.cardKey);
+      ref.read(notSetStartNodeProvider.notifier).update((state) => false);
+    } else {
+      ref.read(endKeyProvider.notifier).update((state) => widget.cardKey);
+      ref.read(notSetStartNodeProvider.notifier).update((state) => true);
+    }
+  }
+
+  void updateCardPosition(DraggableDetails details) {
+    var positions = ref.read(cardPositionMapProvider);
+    positions[widget.cardKey]?.position = details.offset;
+
+    positions[widget.cardKey]?.inputNode.position =
+        details.offset + const Offset(0, 100);
+    positions[widget.cardKey]?.outputNode.position =
+        details.offset + const Offset(200, 100);
+
+    ref.read(cardPositionMapProvider.notifier).update((state) {
+      state = Map.from(positions);
+      return state;
+    });
+  }
+
   setChildByType(GlobalKey key) {
     switch (ref.watch(cardTypeProvider(key))) {
       case CardType.simple:
@@ -172,9 +191,11 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
             Icon(Icons.abc),
             Text("data"),
             Expanded(
-                child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Icon(Icons.check_circle)))
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Icon(Icons.check_circle),
+              ),
+            ),
           ],
         );
       case CardType.complex:
@@ -184,5 +205,44 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
         );
       default:
     }
+  }
+
+  Overlap getOverlapPercent(Offset cardTopLeft, Offset cardBottomRight,
+      Offset groupTopLeft, Offset groupBottomRight) {
+    var xPer = 0.0;
+    var yPer = 0.0;
+    var cardX = [
+      for (var i = cardTopLeft.dx; i < cardBottomRight.dx + 1; i++) i
+    ];
+    var cardY = [
+      for (var i = cardTopLeft.dy; i < cardBottomRight.dy + 1; i++) i
+    ];
+    var groupX = [
+      for (var i = groupTopLeft.dx; i < groupBottomRight.dx + 1; i++) i
+    ];
+    var groupY = [
+      for (var i = groupTopLeft.dy; i < groupBottomRight.dy + 1; i++) i
+    ];
+
+    var xList = [cardX, groupX];
+    var yList = [cardY, groupY];
+
+    var xOverlap = xList
+        .fold(xList.first.toSet(), (a, b) => a.intersection(b.toSet()))
+        .length;
+    var xTotal = min(cardBottomRight.dx - cardTopLeft.dx,
+            groupBottomRight.dx - groupTopLeft.dx) +
+        1;
+    var yOverlap = yList
+        .fold(yList.first.toSet(), (a, b) => a.intersection(b.toSet()))
+        .length;
+    var yTotal = min(cardBottomRight.dy - cardTopLeft.dy,
+            groupBottomRight.dy - groupTopLeft.dy) +
+        1;
+
+    xPer = xOverlap / xTotal;
+    yPer = yOverlap / yTotal;
+
+    return Overlap(xPer: xPer, yPer: yPer);
   }
 }
