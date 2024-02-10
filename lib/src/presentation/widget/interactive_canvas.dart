@@ -39,8 +39,8 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
                   return CustomMultiChildLayout(
                     delegate: LayoutDelegate(ref),
                     children: [
-                      ...ref.watch(infoCardWidgetListProvider),
                       ...ref.watch(groupWidgetListProvider),
+                      ...ref.watch(infoCardWidgetListProvider),
                     ],
                   );
                 },
@@ -180,6 +180,28 @@ class LayoutDelegate extends MultiChildLayoutDelegate {
 
   @override
   void performLayout(Size size) {
+    var groupPositions = ref.watch(groupPositionMapProvider);
+    for (var key in groupPositions.keys) {
+      var position = groupPositions[key]?.position;
+      if (hasChild(key)) {
+        final Size currentSize = layoutChild(
+            key, BoxConstraints(maxWidth: size.width, maxHeight: size.height));
+        if (position != Offset.infinite) {
+          positionChild(key, position!);
+          for (var group in groupPositions.values) {
+            if (group.position == groupChildPosition) {
+              groupChildPosition += Offset(0, currentSize.height + 5);
+            }
+          }
+        } else {
+          positionChild(key, groupChildPosition);
+          groupPositions[key]?.position = groupChildPosition;
+          groupPositionsClone[key] = groupPositions[key]!;
+          groupChildPosition += Offset(0, currentSize.height + 5);
+        }
+      }
+    }
+
     var cardPositions = ref.watch(cardPositionMapProvider);
     for (var key in cardPositions.keys) {
       var position = cardPositions[key]?.position;
@@ -205,28 +227,6 @@ class LayoutDelegate extends MultiChildLayoutDelegate {
               cardChildPosition + const Offset(200, 100);
           cardPositionsClone[key] = cardPositions[key]!;
           cardChildPosition += Offset(0, currentSize.height + 5);
-        }
-      }
-    }
-
-    var groupPositions = ref.watch(groupPositionMapProvider);
-    for (var key in groupPositions.keys) {
-      var position = groupPositions[key]?.position;
-      if (hasChild(key)) {
-        final Size currentSize = layoutChild(
-            key, BoxConstraints(maxWidth: size.width, maxHeight: size.height));
-        if (position != Offset.infinite) {
-          positionChild(key, position!);
-          for (var group in groupPositions.values) {
-            if (group.position == groupChildPosition) {
-              groupChildPosition += Offset(0, currentSize.height + 5);
-            }
-          }
-        } else {
-          positionChild(key, groupChildPosition);
-          groupPositions[key]?.position = groupChildPosition;
-          groupPositionsClone[key] = groupPositions[key]!;
-          groupChildPosition += Offset(0, currentSize.height + 5);
         }
       }
     }
