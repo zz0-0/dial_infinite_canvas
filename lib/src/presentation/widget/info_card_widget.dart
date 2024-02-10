@@ -131,8 +131,6 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
   }
 
   void detectOverlapping(DragUpdateDetails details) {
-    // var box =
-    //     widget.cardKey.currentState?.context.findRenderObject()! as RenderBox;
     Offset cardTopLeft = details.globalPosition;
     Offset cardBottomRight = cardTopLeft +
         Offset(ref.read(cardWidthProvider(widget.cardKey)),
@@ -211,17 +209,23 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
       Offset groupTopLeft, Offset groupBottomRight) {
     var xPer = 0.0;
     var yPer = 0.0;
-    var cardX = [
-      for (var i = cardTopLeft.dx; i < cardBottomRight.dx + 1; i++) i
-    ];
-    var cardY = [
-      for (var i = cardTopLeft.dy; i < cardBottomRight.dy + 1; i++) i
-    ];
+
+    int cardTopLeftDx = cardTopLeft.dx.toInt();
+    int cardBottomRightDx = cardBottomRight.dx.toInt();
+    int cardTopLeftDy = cardTopLeft.dy.toInt();
+    int cardBottomRightDy = cardBottomRight.dy.toInt();
+    int groupTopLeftDx = groupTopLeft.dx.toInt();
+    int groupBottomRightDx = groupBottomRight.dx.toInt();
+    int groupTopLeftDy = groupTopLeft.dy.toInt();
+    int groupBottomRightDy = groupBottomRight.dy.toInt();
+
+    var cardX = [for (int i = cardTopLeftDx; i < cardBottomRightDx + 1; i++) i];
+    var cardY = [for (int i = cardTopLeftDy; i < cardBottomRightDy + 1; i++) i];
     var groupX = [
-      for (var i = groupTopLeft.dx; i < groupBottomRight.dx + 1; i++) i
+      for (int i = groupTopLeftDx; i < groupBottomRightDx + 1; i++) i
     ];
     var groupY = [
-      for (var i = groupTopLeft.dy; i < groupBottomRight.dy + 1; i++) i
+      for (int i = groupTopLeftDy; i < groupBottomRightDy + 1; i++) i
     ];
 
     var xList = [cardX, groupX];
@@ -230,14 +234,14 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
     var xOverlap = xList
         .fold(xList.first.toSet(), (a, b) => a.intersection(b.toSet()))
         .length;
-    var xTotal = min(cardBottomRight.dx - cardTopLeft.dx,
-            groupBottomRight.dx - groupTopLeft.dx) +
+    var xTotal = min(cardBottomRightDx - cardTopLeftDx,
+            groupBottomRightDx - groupTopLeftDx) +
         1;
     var yOverlap = yList
         .fold(yList.first.toSet(), (a, b) => a.intersection(b.toSet()))
         .length;
-    var yTotal = min(cardBottomRight.dy - cardTopLeft.dy,
-            groupBottomRight.dy - groupTopLeft.dy) +
+    var yTotal = min(cardBottomRightDy - cardTopLeftDy,
+            groupBottomRightDy - groupTopLeftDy) +
         1;
 
     xPer = xOverlap / xTotal;
