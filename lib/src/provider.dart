@@ -4,7 +4,10 @@ import 'package:dial_infinite_canvas/src/domain/model/edge.dart';
 import 'package:dial_infinite_canvas/src/domain/model/group.dart';
 import 'package:dial_infinite_canvas/src/domain/model/info_card.dart';
 import 'package:dial_infinite_canvas/src/presentation/widget/info_card_widget.dart';
+import 'package:dial_infinite_canvas/src/presentation/controller/group_notifier.dart';
 import 'package:dial_infinite_canvas/src/presentation/widget/interactive_canvas.dart';
+import 'package:dial_infinite_canvas/src/presentation/controller/layout_id_notifier.dart';
+import 'package:dial_infinite_canvas/src/presentation/controller/info_card_notifier.dart';
 
 // default
 final menuLeftPositionProvider = StateProvider<double>((ref) => 10);
@@ -29,24 +32,56 @@ final notSetStartNodeProvider = StateProvider<bool>((ref) => true);
 final connectedNodeListProvider = StateProvider<List<Edge>>((ref) => []);
 final mouseXProvider = StateProvider((ref) => 0.0);
 final mouseYProvider = StateProvider((ref) => 0.0);
-final edgePainterProvider = Provider(
-  (ref) => EdgePainter(
-    node: ref.watch(connectedNodeListProvider),
-    start: ref.watch(startKeyProvider),
-    end: ref.watch(endKeyProvider),
-    cardPositions: ref.watch(cardPositionMapProvider),
-    mouseX: ref.watch(mouseXProvider),
-    mouseY: ref.watch(mouseYProvider),
-  ),
-);
+// final edgePainterProvider = Provider(
+//   (ref) => EdgePainter(
+//     node: ref.watch(connectedNodeListProvider),
+//     start: ref.watch(startKeyProvider),
+//     end: ref.watch(endKeyProvider),
+//     cardPositions: ref.watch(cardPositionMapProvider),
+//     mouseX: ref.watch(mouseXProvider),
+//     mouseY: ref.watch(mouseYProvider),
+//   ),
+// );
 
 // drag and drop
 final infoCardWidgetListProvider = StateProvider<List<LayoutId>>((ref) => []);
-final cardPositionMapProvider =
-    StateProvider<Map<GlobalKey, InfoCard>>((ref) => {});
-final groupWidgetListProvider = StateProvider<List<LayoutId>>((ref) => []);
-final groupPositionMapProvider =
-    StateProvider<Map<GlobalKey, Group>>((ref) => {});
+// final cardPositionMapProvider =
+//     StateProvider<Map<GlobalKey, InfoCard>>((ref) => {});
+// final groupWidgetListProvider = StateProvider<List<LayoutId>>((ref) => []);
+// final groupPositionMapProvider =
+//     StateProvider<Map<GlobalKey, Group>>((ref) => {});
+final cardLayoutProvider =
+    StateNotifierProvider<LayoutIdNotifier, List<LayoutId>>(
+        (ref) => LayoutIdNotifier());
+final cardProvider = StateNotifierProvider<InfoCardNotifier, InfoCard>((ref) {
+  var key = GlobalKey();
+  var key1 = GlobalKey();
+  var key2 = GlobalKey();
+  return InfoCardNotifier(
+    InfoCard(
+      key: key,
+      position: Offset.infinite,
+      height: ref.watch(cardHeightProvider(key)),
+      width: ref.watch(cardWidthProvider(key)),
+      inputNode: key1,
+      outputNode: key2,
+    ),
+  );
+});
+
+final groupLayoutProvider =
+    StateNotifierProvider<LayoutIdNotifier, List<LayoutId>>(
+        (ref) => LayoutIdNotifier());
+final groupProvider = StateNotifierProvider<GroupNotifier, Group>((ref) {
+  var key = GlobalKey();
+  return GroupNotifier(
+    Group(
+      key: key,
+      position: Offset.infinite,
+      cards: const <GlobalKey>{},
+    ),
+  );
+});
 
 // scale
 final scaleProvider = StateProvider((ref) => 1.0);

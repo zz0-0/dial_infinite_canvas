@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:dial_infinite_canvas/src/enum.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dial_infinite_canvas/src/provider.dart';
-import 'package:dial_infinite_canvas/src/domain/model/node.dart';
-import 'package:dial_infinite_canvas/src/domain/model/group.dart';
-import 'package:dial_infinite_canvas/src/domain/model/info_card.dart';
-import 'package:dial_infinite_canvas/src/presentation/widget/group_widget.dart';
-import 'package:dial_infinite_canvas/src/presentation/widget/info_card_widget.dart';
 
 class Menu extends ConsumerStatefulWidget {
   const Menu({super.key});
@@ -46,67 +42,52 @@ class _MenuState extends ConsumerState<Menu> {
   }
 
   createInfoCardWidget(WidgetRef ref) {
-    final GlobalKey key = GlobalKey();
-    final GlobalKey key1 = GlobalKey();
-    final GlobalKey key2 = GlobalKey();
-    var positionWidget = LayoutId(
-      id: key,
-      child: InfoCardWidget(
-        cardKey: key,
-      ),
-    );
+    // final GlobalKey key = GlobalKey();
+    // final GlobalKey key1 = GlobalKey();
+    // final GlobalKey key2 = GlobalKey();
+    // var positionWidget = LayoutId(
+    //   id: key,
+    //   child: InfoCardWidget(
+    //     cardKey: key,
+    //   ),
+    // );
 
-    var details = ref.read(infoCardWidgetListProvider);
-    details.add(positionWidget);
+    // var details = ref.read(infoCardWidgetListProvider);
+    // details.add(positionWidget);
 
-    ref
-        .read(infoCardWidgetListProvider.notifier)
-        .update((state) => details.toList());
+    // ref
+    //     .read(infoCardWidgetListProvider.notifier)
+    //     .update((state) => details.toList());
 
-    var cardPositions = ref.read(cardPositionMapProvider);
-    cardPositions[key] = InfoCard(
-      key: key,
-      position: Offset.infinite,
-      height: ref.read(cardHeightProvider(key)),
-      width: ref.read(cardHeightProvider(key)),
-      inputNode: Node(key: key1, position: Offset.infinite),
-      outputNode: Node(key: key2, position: Offset.infinite),
-    );
+    // var cardPositions = ref.read(cardPositionMapProvider);
+    // cardPositions[key] = InfoCard(
+    //   key: key,
+    //   position: Offset.infinite,
+    //   height: ref.read(cardHeightProvider(key)),
+    //   width: ref.read(cardHeightProvider(key)),
+    //   inputNode: Node(key: key1, position: Offset.infinite),
+    //   outputNode: Node(key: key2, position: Offset.infinite),
+    // );
 
-    ref.read(cardPositionMapProvider.notifier).update((state) {
-      state = cardPositions;
-      return state;
-    });
+    // ref.read(cardPositionMapProvider.notifier).update((state) {
+    //   state = cardPositions;
+    //   return state;
+    // });
+
+    var card = ref.watch(cardProvider);
+
+    var layoutId =
+        ref.read(cardLayoutProvider.notifier).build(card.key, ResizeType.card);
+    ref.read(cardLayoutProvider.notifier).addLayoutId(layoutId);
   }
 
   createGroupWidget(WidgetRef ref) {
-    final GlobalKey key = GlobalKey();
+    var group = ref.watch(groupProvider);
 
-    var positionWidget = LayoutId(
-      id: key,
-      child: GroupWidget(
-        groupKey: key,
-      ),
-    );
-
-    var details = ref.read(groupWidgetListProvider);
-    details.add(positionWidget);
-
-    ref
-        .read(groupWidgetListProvider.notifier)
-        .update((state) => details.toList());
-
-    var groupPositions = ref.read(groupPositionMapProvider);
-    groupPositions[key] = Group(
-      key: key,
-      position: Offset.infinite,
-      cards: {},
-    );
-
-    ref.read(groupPositionMapProvider.notifier).update((state) {
-      state = groupPositions;
-      return state;
-    });
+    var layoutId = ref
+        .read(groupLayoutProvider.notifier)
+        .build(group.key, ResizeType.group);
+    ref.read(groupLayoutProvider.notifier).addLayoutId(layoutId);
   }
 
   resetCanvasZoomLevel() {

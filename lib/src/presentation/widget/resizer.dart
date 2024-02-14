@@ -1,23 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:dial_infinite_canvas/src/enum.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dial_infinite_canvas/src/provider.dart';
-
-enum ResizeDirection {
-  bottom("BOTTOM"),
-  right("RIGHT"),
-  bottomRight("BOTTOMRIGHT");
-
-  const ResizeDirection(this.label);
-  final String label;
-}
-
-enum ResizeType {
-  card("CARD"),
-  group("GROUP");
-
-  const ResizeType(this.label);
-  final String label;
-}
 
 class Resizer extends ConsumerStatefulWidget {
   const Resizer({

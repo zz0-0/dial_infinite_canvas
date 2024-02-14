@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:dial_infinite_canvas/src/enum.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dial_infinite_canvas/src/provider.dart';
 import 'package:dial_infinite_canvas/src/domain/model/overlap.dart';
@@ -131,29 +132,29 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
   }
 
   void detectOverlapping(DragUpdateDetails details) {
-    Offset cardTopLeft = details.globalPosition;
-    Offset cardBottomRight = cardTopLeft +
-        Offset(ref.read(cardWidthProvider(widget.cardKey)),
-            ref.read(cardHeightProvider(widget.cardKey)));
-    var groups = ref.read(groupPositionMapProvider);
-    for (var key in groups.keys) {
-      var groupTopLeft = groups[key]?.position;
-      var groupBottomRight = groupTopLeft! +
-          Offset(ref.read(groupWidthProvider(key)),
-              ref.read(groupHeightProvider(key)));
-      var overlap = getOverlapPercent(
-          cardTopLeft, cardBottomRight, groupTopLeft, groupBottomRight);
-      var x = overlap.xPer;
-      var y = overlap.yPer;
-      if (x == 1 && y == 1) {
-        ref.read(groupPositionMapProvider.notifier).update((state) {
-          groups[key]?.cards[widget.cardKey] =
-              ref.read(cardPositionMapProvider)[widget.cardKey]!;
-          state = groups;
-          return state;
-        });
-      }
-    }
+    // Offset cardTopLeft = details.globalPosition;
+    // Offset cardBottomRight = cardTopLeft +
+    //     Offset(ref.read(cardWidthProvider(widget.cardKey)),
+    //         ref.read(cardHeightProvider(widget.cardKey)));
+    // var groups = ref.read(groupPositionMapProvider);
+    // for (var key in groups.keys) {
+    //   var groupTopLeft = groups[key]?.position;
+    //   var groupBottomRight = groupTopLeft! +
+    //       Offset(ref.read(groupWidthProvider(key)),
+    //           ref.read(groupHeightProvider(key)));
+    //   var overlap = getOverlapPercent(
+    //       cardTopLeft, cardBottomRight, groupTopLeft, groupBottomRight);
+    //   var x = overlap.xPer;
+    //   var y = overlap.yPer;
+    //   if (x == 1 && y == 1) {
+    //     ref.read(groupPositionMapProvider.notifier).update((state) {
+    //       groups[key]?.cards[widget.cardKey] =
+    //           ref.read(cardPositionMapProvider)[widget.cardKey]!;
+    //       state = groups;
+    //       return state;
+    //     });
+    //   }
+    // }
   }
 
   void updateNodeKey(bool notSetStarNode) {
@@ -167,18 +168,18 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
   }
 
   void updateCardPosition(DraggableDetails details) {
-    var positions = ref.read(cardPositionMapProvider);
-    positions[widget.cardKey]?.position = details.offset;
+    // var positions = ref.read(cardPositionMapProvider);
+    // positions[widget.cardKey]?.position = details.offset;
 
-    positions[widget.cardKey]?.inputNode.position =
-        details.offset + const Offset(0, 100);
-    positions[widget.cardKey]?.outputNode.position =
-        details.offset + const Offset(200, 100);
+    // positions[widget.cardKey]?.inputNode.position =
+    //     details.offset + const Offset(0, 100);
+    // positions[widget.cardKey]?.outputNode.position =
+    //     details.offset + const Offset(200, 100);
 
-    ref.read(cardPositionMapProvider.notifier).update((state) {
-      state = Map.from(positions);
-      return state;
-    });
+    // ref.read(cardPositionMapProvider.notifier).update((state) {
+    //   state = Map.from(positions);
+    //   return state;
+    // });
   }
 
   setChildByType(GlobalKey key) {
