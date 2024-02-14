@@ -75,7 +75,6 @@ class _MenuState extends ConsumerState<Menu> {
     // });
 
     var card = ref.watch(cardProvider);
-
     var layoutId =
         ref.read(cardLayoutProvider.notifier).build(card.key, ResizeType.card);
     ref.read(cardLayoutProvider.notifier).addLayoutId(layoutId);

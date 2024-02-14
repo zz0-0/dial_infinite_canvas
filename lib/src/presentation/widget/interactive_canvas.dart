@@ -35,12 +35,12 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
               const Background(),
               Consumer(
                 builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                  // executeAfterLayout();
+                  executeAfterLayout();
                   return CustomMultiChildLayout(
                     delegate: LayoutDelegate(ref),
                     children: [
                       ...ref.watch(groupLayoutProvider),
-                      // ...ref.watch(infoCardWidgetListProvider),
+                      ...ref.watch(cardLayoutProvider),
                     ],
                   );
                 },
@@ -68,24 +68,22 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
   }
 
   Future<void> executeAfterLayout() async {
-    // await Future.delayed(Duration.zero);
-    // if (cardPositionsClone.isNotEmpty) {
-    //   if (ref.read(cardPositionMapProvider) != cardPositionsClone) {
-    //     ref.read(cardPositionMapProvider.notifier).update((state) {
-    //       state = cardPositionsClone;
-    //       return state;
-    //     });
-    //   }
-    // }
+    await Future.delayed(Duration.zero);
+    if (groupClone != null) {
+      if (groupClone!.position != Offset.infinite) {
+        if (ref.watch(cardProvider) != groupClone) {
+          ref.read(groupProvider.notifier).updatePosition(groupClone!.position);
+        }
+      }
+    }
 
-    // if (groupPositionsClone.isNotEmpty) {
-    //   if (ref.read(groupPositionMapProvider) != groupPositionsClone) {
-    //     ref.read(groupPositionMapProvider.notifier).update((state) {
-    //       state = groupPositionsClone;
-    //       return state;
-    //     });
-    //   }
-    // }
+    if (cardClone != null) {
+      if (cardClone!.position != Offset.infinite) {
+        if (ref.watch(cardProvider) != cardClone) {
+          ref.read(cardProvider.notifier).updatePosition(cardClone!.position);
+        }
+      }
+    }
   }
 
   Future<void> executeAfterPaint() async {
@@ -169,8 +167,8 @@ class EdgePainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
 
-Map<GlobalKey, InfoCard> cardPositionsClone = {};
-Map<GlobalKey, Group> groupPositionsClone = {};
+InfoCard? cardClone;
+Group? groupClone;
 
 class LayoutDelegate extends MultiChildLayoutDelegate {
   WidgetRef ref;
@@ -183,7 +181,8 @@ class LayoutDelegate extends MultiChildLayoutDelegate {
     var groupLayout = ref.watch(groupLayoutProvider);
     for (var layoutId in groupLayout) {
       var key = layoutId.id;
-      var position = ref.watch(groupProvider).position;
+      var group = ref.watch(groupProvider);
+      var position = group.position;
       if (hasChild(key)) {
         final Size currentSize = layoutChild(
             key, BoxConstraints(maxWidth: size.width, maxHeight: size.height));
@@ -191,7 +190,7 @@ class LayoutDelegate extends MultiChildLayoutDelegate {
           positionChild(key, position);
         } else {
           positionChild(key, groupChildPosition);
-          ref.read(groupProvider.notifier).updatePosition(groupChildPosition);
+          groupClone = group;
           groupChildPosition += Offset(0, currentSize.height + 5);
         }
       }
@@ -200,7 +199,8 @@ class LayoutDelegate extends MultiChildLayoutDelegate {
     var cardLayout = ref.watch(cardLayoutProvider);
     for (var layoutId in cardLayout) {
       var key = layoutId.id;
-      var position = ref.watch(cardProvider).position;
+      var card = ref.watch(cardProvider);
+      var position = card.position;
       if (hasChild(key)) {
         final Size currentSize = layoutChild(
             key, BoxConstraints(maxWidth: size.width, maxHeight: size.height));
@@ -208,40 +208,12 @@ class LayoutDelegate extends MultiChildLayoutDelegate {
           positionChild(key, position);
         } else {
           positionChild(key, cardChildPosition);
-          ref.read(cardProvider.notifier).updatePosition(cardChildPosition);
+
+          cardClone = card;
           cardChildPosition += Offset(0, currentSize.height + 5);
         }
       }
     }
-
-    // var cardPositions = ref.watch(cardPositionMapProvider);
-    // for (var key in cardPositions.keys) {
-    //   var position = cardPositions[key]?.position;
-    //   if (hasChild(key)) {
-    //     final Size currentSize = layoutChild(
-    //         key, BoxConstraints(maxWidth: size.width, maxHeight: size.height));
-    //     if (position != Offset.infinite) {
-    //       positionChild(key, position!);
-    //       // in case there are some cards has been dragged to other place,
-    //       // the default childPosition will check every occupied spot to avoid overlap with each other,
-    //       // childPosition needs to be an empty spot
-    //       for (var card in cardPositions.values) {
-    //         if (card.position == cardChildPosition) {
-    //           cardChildPosition += Offset(0, currentSize.height + 5);
-    //         }
-    //       }
-    //     } else {
-    //       positionChild(key, cardChildPosition);
-    //       cardPositions[key]?.position = cardChildPosition;
-    //       cardPositions[key]?.inputNode.position =
-    //           cardChildPosition + const Offset(0, 100);
-    //       cardPositions[key]?.outputNode.position =
-    //           cardChildPosition + const Offset(200, 100);
-    //       cardPositionsClone[key] = cardPositions[key]!;
-    //       cardChildPosition += Offset(0, currentSize.height + 5);
-    //     }
-    //   }
-    // }
   }
 
   @override

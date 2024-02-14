@@ -168,18 +168,7 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
   }
 
   void updateCardPosition(DraggableDetails details) {
-    // var positions = ref.read(cardPositionMapProvider);
-    // positions[widget.cardKey]?.position = details.offset;
-
-    // positions[widget.cardKey]?.inputNode.position =
-    //     details.offset + const Offset(0, 100);
-    // positions[widget.cardKey]?.outputNode.position =
-    //     details.offset + const Offset(200, 100);
-
-    // ref.read(cardPositionMapProvider.notifier).update((state) {
-    //   state = Map.from(positions);
-    //   return state;
-    // });
+    ref.read(cardProvider.notifier).updatePosition(details.offset);
   }
 
   setChildByType(GlobalKey key) {

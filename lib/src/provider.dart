@@ -5,9 +5,9 @@ import 'package:dial_infinite_canvas/src/domain/model/group.dart';
 import 'package:dial_infinite_canvas/src/domain/model/info_card.dart';
 import 'package:dial_infinite_canvas/src/presentation/widget/info_card_widget.dart';
 import 'package:dial_infinite_canvas/src/presentation/controller/group_notifier.dart';
-import 'package:dial_infinite_canvas/src/presentation/widget/interactive_canvas.dart';
 import 'package:dial_infinite_canvas/src/presentation/controller/layout_id_notifier.dart';
 import 'package:dial_infinite_canvas/src/presentation/controller/info_card_notifier.dart';
+
 
 // default
 final menuLeftPositionProvider = StateProvider<double>((ref) => 10);

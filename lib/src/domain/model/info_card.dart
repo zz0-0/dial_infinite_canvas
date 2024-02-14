@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:dial_infinite_canvas/src/domain/model/node.dart';
 
 @immutable
 class InfoCard extends Equatable {
