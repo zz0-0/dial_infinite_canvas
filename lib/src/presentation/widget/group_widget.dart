@@ -45,6 +45,8 @@ class _GroupWidgetState extends ConsumerState<GroupWidget> {
   }
 
   void updateGroupPosition(DraggableDetails details) {
-    ref.read(groupProvider.notifier).updatePosition(details.offset);
+    ref
+        .read(groupProvider(widget.groupKey).notifier)
+        .updatePosition(details.offset);
   }
 }

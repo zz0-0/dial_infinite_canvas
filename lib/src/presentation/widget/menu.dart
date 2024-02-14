@@ -42,46 +42,16 @@ class _MenuState extends ConsumerState<Menu> {
   }
 
   createInfoCardWidget(WidgetRef ref) {
-    // final GlobalKey key = GlobalKey();
-    // final GlobalKey key1 = GlobalKey();
-    // final GlobalKey key2 = GlobalKey();
-    // var positionWidget = LayoutId(
-    //   id: key,
-    //   child: InfoCardWidget(
-    //     cardKey: key,
-    //   ),
-    // );
-
-    // var details = ref.read(infoCardWidgetListProvider);
-    // details.add(positionWidget);
-
-    // ref
-    //     .read(infoCardWidgetListProvider.notifier)
-    //     .update((state) => details.toList());
-
-    // var cardPositions = ref.read(cardPositionMapProvider);
-    // cardPositions[key] = InfoCard(
-    //   key: key,
-    //   position: Offset.infinite,
-    //   height: ref.read(cardHeightProvider(key)),
-    //   width: ref.read(cardHeightProvider(key)),
-    //   inputNode: Node(key: key1, position: Offset.infinite),
-    //   outputNode: Node(key: key2, position: Offset.infinite),
-    // );
-
-    // ref.read(cardPositionMapProvider.notifier).update((state) {
-    //   state = cardPositions;
-    //   return state;
-    // });
-
-    var card = ref.watch(cardProvider);
+    GlobalKey key = GlobalKey();
+    var card = ref.watch(cardProvider(key));
     var layoutId =
         ref.read(cardLayoutProvider.notifier).build(card.key, ResizeType.card);
     ref.read(cardLayoutProvider.notifier).addLayoutId(layoutId);
   }
 
   createGroupWidget(WidgetRef ref) {
-    var group = ref.watch(groupProvider);
+    GlobalKey key = GlobalKey();
+    var group = ref.watch(groupProvider(key));
 
     var layoutId = ref
         .read(groupLayoutProvider.notifier)

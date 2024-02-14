@@ -71,16 +71,20 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
     await Future.delayed(Duration.zero);
     if (groupClone != null) {
       if (groupClone!.position != Offset.infinite) {
-        if (ref.watch(cardProvider) != groupClone) {
-          ref.read(groupProvider.notifier).updatePosition(groupClone!.position);
+        if (ref.watch(groupProvider(groupClone!.key)) != groupClone) {
+          ref
+              .read(groupProvider(groupClone!.key).notifier)
+              .updatePosition(groupClone!.position);
         }
       }
     }
 
     if (cardClone != null) {
       if (cardClone!.position != Offset.infinite) {
-        if (ref.watch(cardProvider) != cardClone) {
-          ref.read(cardProvider.notifier).updatePosition(cardClone!.position);
+        if (ref.watch(cardProvider(cardClone!.key)) != cardClone) {
+          ref
+              .read(cardProvider(cardClone!.key).notifier)
+              .updatePosition(cardClone!.position);
         }
       }
     }
@@ -181,7 +185,7 @@ class LayoutDelegate extends MultiChildLayoutDelegate {
     var groupLayout = ref.watch(groupLayoutProvider);
     for (var layoutId in groupLayout) {
       var key = layoutId.id;
-      var group = ref.watch(groupProvider);
+      var group = ref.watch(groupProvider(key as GlobalKey));
       var position = group.position;
       if (hasChild(key)) {
         final Size currentSize = layoutChild(
@@ -199,7 +203,7 @@ class LayoutDelegate extends MultiChildLayoutDelegate {
     var cardLayout = ref.watch(cardLayoutProvider);
     for (var layoutId in cardLayout) {
       var key = layoutId.id;
-      var card = ref.watch(cardProvider);
+      var card = ref.watch(cardProvider(key as GlobalKey));
       var position = card.position;
       if (hasChild(key)) {
         final Size currentSize = layoutChild(

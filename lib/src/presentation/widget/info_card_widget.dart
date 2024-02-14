@@ -168,7 +168,9 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
   }
 
   void updateCardPosition(DraggableDetails details) {
-    ref.read(cardProvider.notifier).updatePosition(details.offset);
+    ref
+        .read(cardProvider(widget.cardKey).notifier)
+        .updatePosition(details.offset);
   }
 
   setChildByType(GlobalKey key) {

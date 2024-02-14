@@ -8,7 +8,6 @@ import 'package:dial_infinite_canvas/src/presentation/controller/group_notifier.
 import 'package:dial_infinite_canvas/src/presentation/controller/layout_id_notifier.dart';
 import 'package:dial_infinite_canvas/src/presentation/controller/info_card_notifier.dart';
 
-
 // default
 final menuLeftPositionProvider = StateProvider<double>((ref) => 10);
 final menuBottomPositionProvider = StateProvider<double>((ref) => 10);
@@ -44,17 +43,12 @@ final mouseYProvider = StateProvider((ref) => 0.0);
 // );
 
 // drag and drop
-final infoCardWidgetListProvider = StateProvider<List<LayoutId>>((ref) => []);
-// final cardPositionMapProvider =
-//     StateProvider<Map<GlobalKey, InfoCard>>((ref) => {});
-// final groupWidgetListProvider = StateProvider<List<LayoutId>>((ref) => []);
-// final groupPositionMapProvider =
-//     StateProvider<Map<GlobalKey, Group>>((ref) => {});
 final cardLayoutProvider =
     StateNotifierProvider<LayoutIdNotifier, List<LayoutId>>(
         (ref) => LayoutIdNotifier());
-final cardProvider = StateNotifierProvider<InfoCardNotifier, InfoCard>((ref) {
-  var key = GlobalKey();
+final cardProvider =
+    StateNotifierProvider.family<InfoCardNotifier, InfoCard, GlobalKey>(
+        (ref, key) {
   var key1 = GlobalKey();
   var key2 = GlobalKey();
   return InfoCardNotifier(
@@ -72,8 +66,8 @@ final cardProvider = StateNotifierProvider<InfoCardNotifier, InfoCard>((ref) {
 final groupLayoutProvider =
     StateNotifierProvider<LayoutIdNotifier, List<LayoutId>>(
         (ref) => LayoutIdNotifier());
-final groupProvider = StateNotifierProvider<GroupNotifier, Group>((ref) {
-  var key = GlobalKey();
+final groupProvider =
+    StateNotifierProvider.family<GroupNotifier, Group, GlobalKey>((ref, key) {
   return GroupNotifier(
     Group(
       key: key,
