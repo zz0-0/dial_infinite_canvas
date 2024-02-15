@@ -110,7 +110,7 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
         }
       }
     }
-    // print(groupClone!.position);
+    groupClone = null;
 
     // save the position of the card
     if (cardClone != null) {
@@ -129,6 +129,7 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
         }
       }
     }
+    cardClone = null;
   }
 }
 
