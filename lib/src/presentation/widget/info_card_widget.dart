@@ -132,29 +132,29 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
   }
 
   void detectOverlapping(DragUpdateDetails details) {
-    // Offset cardTopLeft = details.globalPosition;
-    // Offset cardBottomRight = cardTopLeft +
-    //     Offset(ref.read(cardWidthProvider(widget.cardKey)),
-    //         ref.read(cardHeightProvider(widget.cardKey)));
-    // var groups = ref.read(groupPositionMapProvider);
-    // for (var key in groups.keys) {
-    //   var groupTopLeft = groups[key]?.position;
-    //   var groupBottomRight = groupTopLeft! +
-    //       Offset(ref.read(groupWidthProvider(key)),
-    //           ref.read(groupHeightProvider(key)));
-    //   var overlap = getOverlapPercent(
-    //       cardTopLeft, cardBottomRight, groupTopLeft, groupBottomRight);
-    //   var x = overlap.xPer;
-    //   var y = overlap.yPer;
-    //   if (x == 1 && y == 1) {
-    //     ref.read(groupPositionMapProvider.notifier).update((state) {
-    //       groups[key]?.cards[widget.cardKey] =
-    //           ref.read(cardPositionMapProvider)[widget.cardKey]!;
-    //       state = groups;
-    //       return state;
-    //     });
-    //   }
-    // }
+    if (details.globalPosition != Offset.infinite) {
+      Offset cardTopLeft = details.globalPosition;
+      Offset cardBottomRight = cardTopLeft +
+          Offset(ref.read(cardWidthProvider(widget.cardKey)),
+              ref.read(cardHeightProvider(widget.cardKey)));
+      var layoutIds = ref.read(groupLayoutProvider);
+      for (var layoutId in layoutIds) {
+        var groupKey = layoutId.id as GlobalKey;
+        var groupTopLeft = ref.watch(groupProvider(groupKey)).position;
+        if (groupTopLeft != Offset.infinite) {
+          var groupBottomRight = groupTopLeft +
+              Offset(ref.read(groupWidthProvider(groupKey)),
+                  ref.read(groupHeightProvider(groupKey)));
+          var overlap = getOverlapPercent(
+              cardTopLeft, cardBottomRight, groupTopLeft, groupBottomRight);
+          var x = overlap.xPer;
+          var y = overlap.yPer;
+          if (x == 1 && y == 1) {
+            ref.read(groupProvider(groupKey).notifier).addCard(widget.cardKey);
+          }
+        }
+      }
+    }
   }
 
   void updateNodeKey(bool notSetStarNode) {
@@ -171,6 +171,14 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
     ref
         .read(cardProvider(widget.cardKey).notifier)
         .updatePosition(details.offset);
+
+    var card = ref.watch(cardProvider(widget.cardKey));
+    ref
+        .read(nodeProvider(card.inputNode).notifier)
+        .updatePosition(details.offset + const Offset(0, 100));
+    ref
+        .read(nodeProvider(card.outputNode).notifier)
+        .updatePosition(details.offset + const Offset(200, 100));
   }
 
   setChildByType(GlobalKey key) {

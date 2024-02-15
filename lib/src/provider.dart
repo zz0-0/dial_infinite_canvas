@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dial_infinite_canvas/src/domain/model/node.dart';
 import 'package:dial_infinite_canvas/src/domain/model/edge.dart';
 import 'package:dial_infinite_canvas/src/domain/model/group.dart';
 import 'package:dial_infinite_canvas/src/domain/model/info_card.dart';
 import 'package:dial_infinite_canvas/src/presentation/widget/info_card_widget.dart';
+import 'package:dial_infinite_canvas/src/presentation/controller/node_notifier.dart';
 import 'package:dial_infinite_canvas/src/presentation/controller/group_notifier.dart';
 import 'package:dial_infinite_canvas/src/presentation/controller/layout_id_notifier.dart';
 import 'package:dial_infinite_canvas/src/presentation/controller/info_card_notifier.dart';
@@ -33,14 +35,19 @@ final mouseXProvider = StateProvider((ref) => 0.0);
 final mouseYProvider = StateProvider((ref) => 0.0);
 // final edgePainterProvider = Provider(
 //   (ref) => EdgePainter(
+//     // ref: ref.,
 //     node: ref.watch(connectedNodeListProvider),
 //     start: ref.watch(startKeyProvider),
 //     end: ref.watch(endKeyProvider),
-//     cardPositions: ref.watch(cardPositionMapProvider),
+//     // cardPositions: ref.watch(cardPositionMapProvider),
 //     mouseX: ref.watch(mouseXProvider),
 //     mouseY: ref.watch(mouseYProvider),
 //   ),
 // );
+final nodeProvider =
+    StateNotifierProvider.family<NodeNotifier, Node, GlobalKey>((ref, key) {
+  return NodeNotifier(Node(key: key, position: Offset.infinite));
+});
 
 // drag and drop
 final cardLayoutProvider =

@@ -10,12 +10,14 @@ class GroupNotifier extends StateNotifier<Group> {
   }
 
   void addCard(GlobalKey key) {
-    state.cards.add(key);
-    state = state.copyWith(cards: state.cards);
+    var newState = state;
+    newState.cards.add(key);
+    state = state.copyWith(cards: newState.cards);
   }
 
   void removeCard(GlobalKey key) {
-    state.cards.remove(key);
-    state = state.copyWith(cards: state.cards);
+    var newState = state;
+    newState.cards.remove(key);
+    state = state.copyWith(cards: newState.cards);
   }
 }

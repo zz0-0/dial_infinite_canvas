@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dial_infinite_canvas/src/provider.dart';
-import 'package:dial_infinite_canvas/src/domain/model/edge.dart';
 import 'package:dial_infinite_canvas/src/domain/model/group.dart';
 import 'package:dial_infinite_canvas/src/domain/model/info_card.dart';
 import 'package:dial_infinite_canvas/src/presentation/widget/background.dart';
@@ -45,12 +44,12 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
                   );
                 },
               ),
-              // Consumer(
-              //   builder: (BuildContext context, WidgetRef ref, Widget? child) {
-              //     executeAfterPaint();
-              //     return CustomPaint(painter: ref.watch(edgePainterProvider));
-              //   },
-              // ),
+              Consumer(
+                builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                  // executeAfterPaint();
+                  return CustomPaint(painter: EdgePainter(ref));
+                },
+              ),
             ],
           ),
         ),
@@ -85,6 +84,13 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
           ref
               .read(cardProvider(cardClone!.key).notifier)
               .updatePosition(cardClone!.position);
+          var card = ref.watch(cardProvider(cardClone!.key));
+          ref
+              .read(nodeProvider(card.inputNode).notifier)
+              .updatePosition(cardClone!.position + const Offset(0, 100));
+          ref
+              .read(nodeProvider(card.outputNode).notifier)
+              .updatePosition(cardClone!.position + const Offset(200, 100));
         }
       }
     }
@@ -123,48 +129,42 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
 }
 
 class EdgePainter extends CustomPainter {
-  List<Edge> node;
-  GlobalKey? start;
-  GlobalKey? end;
-  Map<GlobalKey, InfoCard> cardPositions;
-  double mouseX;
-  double mouseY;
-
-  EdgePainter({
-    required this.node,
-    required this.start,
-    required this.end,
-    required this.cardPositions,
-    required this.mouseX,
-    required this.mouseY,
-  });
+  WidgetRef ref;
+  EdgePainter(this.ref);
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = Colors.blue;
 
-    // if (node.isNotEmpty) {
-    //   for (var n in node) {
-    //     var source = cardPositions[n.sourceCardKey]?.outputNode.position;
-    //     var target = cardPositions[n.targetCardKey]?.inputNode.position;
-    //     if (source != Offset.infinite && target != Offset.infinite) {
-    //       canvas.drawLine(source!, target!, paint);
-    //     }
-    //   }
-    // }
+    var node = ref.watch(connectedNodeListProvider);
+    var start = ref.watch(startKeyProvider);
+    var end = ref.watch(endKeyProvider);
+    var mouseX = ref.watch(mouseXProvider);
+    var mouseY = ref.watch(mouseYProvider);
 
-    // if (start != null) {
-    //   if (end != null) {
-    //     var source = cardPositions[start]?.outputNode.position;
-    //     var target = cardPositions[end]?.outputNode.position;
-    //     if (source != Offset.infinite && target != Offset.infinite) {
-    //       canvas.drawLine(source!, target!, paint);
-    //     }
-    //   } else {
-    //     var source = cardPositions[start]?.outputNode.position;
-    //     canvas.drawLine(source!, Offset(mouseX, mouseY), paint);
-    //   }
-    // }
+    if (node.isNotEmpty) {
+      for (var n in node) {
+        var sourceNodeKey = ref.watch(cardProvider(n.sourceCardKey)).outputNode;
+        var targetNodeKey = ref.watch(cardProvider(n.targetCardKey)).inputNode;
+        var source = ref.watch(nodeProvider(sourceNodeKey)).position;
+        var target = ref.watch(nodeProvider(targetNodeKey)).position;
+        if (source != Offset.infinite && target != Offset.infinite) {
+          canvas.drawLine(source, target, paint);
+        }
+      }
+    }
+
+    if (start != null && end != null) {
+      var sourceNodeKey = ref.watch(cardProvider(start)).outputNode;
+      var targetNodeKey = ref.watch(cardProvider(end)).inputNode;
+      var source = ref.watch(nodeProvider(sourceNodeKey)).position;
+      var target = ref.watch(nodeProvider(targetNodeKey)).position;
+      if (source != Offset.infinite && target != Offset.infinite) {
+        canvas.drawLine(source, target, paint);
+      } else {
+        canvas.drawLine(source, Offset(mouseX, mouseY), paint);
+      }
+    }
   }
 
   @override

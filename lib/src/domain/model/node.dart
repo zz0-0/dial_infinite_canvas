@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:equatable/equatable.dart';
 
-class Node {
-  Node({
+@immutable
+class Node extends Equatable {
+  const Node({
     required this.key,
     required this.position,
   });
 
   final GlobalKey key;
-  Offset position;
+  final Offset position;
+
+  Node copyWith({GlobalKey? key, Offset? position}) {
+    return Node(key: key ?? this.key, position: position ?? this.position);
+  }
+
+  @override
+  List<Object?> get props => [key, position];
 }
