@@ -35,10 +35,44 @@ Run the project
 
 ## Features
 
-- Zoom in, zoom out the canvas with mouse scrolling
-- Pan left, pan right the canvas with the left mouse pressing
-- Add cards to the canvas
-- Connect cards' input nodes and output nodes with mouse-clicking
+- [x] Controls
+  - [x] Zoom in, zoom out the canvas with mouse scrolling
+  - [x] Add cards to the canvas
+  - [x] Add groups to the canvas
+- [x] Canvas
+  - [x] Pan left, pan right the canvas with the left mouse pressing
+- [x] Card
+  - [x] Connect cards' input nodes and output nodes with mouse-clicking
+  - [x] Drag and drop cards
+  - [ ] Different card type
+  - [x] Resize cards
+    - [ ] top
+    - [x] bottom
+    - [ ] left
+    - [x] right
+    - [ ] top-left
+    - [ ] top-right
+    - [ ] bottom-left
+    - [x] bottom-right
+- [ ] Group
+  - [ ] Group dot type
+  - [x] Group cards together
+  - [x] Drag and drop cards
+  - [x] Resize groups
+    - [ ] top
+    - [x] bottom
+    - [ ] left
+    - [x] right
+    - [ ] top-left
+    - [ ] top-right
+    - [ ] bottom-left
+    - [x] bottom-right
+    - [ ] dragging after zoomed in or zoomed out
+- [ ] Edge
+  - [ ] Edge label
+  - [ ] Edge type
+- [ ] Minimap
+- [ ] API
 
 ## Authors
 
