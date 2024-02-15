@@ -45,8 +45,15 @@ class _GroupWidgetState extends ConsumerState<GroupWidget> {
   }
 
   void updateGroupPosition(DraggableDetails details) {
+    var oldPosition = ref.watch(groupProvider(widget.groupKey)).position;
+    var diff = details.offset - oldPosition;
     ref
         .read(groupProvider(widget.groupKey).notifier)
         .updatePosition(details.offset);
+    var cards = ref.watch(groupProvider(widget.groupKey)).cards;
+    for (var card in cards) {
+      var position = ref.read(cardProvider(card)).position;
+      ref.read(cardProvider(card).notifier).updatePosition(position + diff);
+    }
   }
 }
