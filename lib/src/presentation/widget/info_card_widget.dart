@@ -149,6 +149,8 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
       var y = overlap.yPer;
       if (x == 1 && y == 1) {
         ref.read(groupProvider(groupKey).notifier).addCard(widget.cardKey);
+      } else {
+        ref.read(groupProvider(groupKey).notifier).removeCard(widget.cardKey);
       }
     }
   }
