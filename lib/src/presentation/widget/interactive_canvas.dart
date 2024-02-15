@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dial_infinite_canvas/src/provider.dart';
+import 'package:dial_infinite_canvas/src/domain/model/edge.dart';
 import 'package:dial_infinite_canvas/src/domain/model/group.dart';
 import 'package:dial_infinite_canvas/src/domain/model/info_card.dart';
 import 'package:dial_infinite_canvas/src/presentation/widget/background.dart';
@@ -46,7 +47,7 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
               ),
               Consumer(
                 builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                  // executeAfterPaint();
+                  executeAfterPaint();
                   return CustomPaint(painter: EdgePainter(ref));
                 },
               ),
@@ -64,6 +65,35 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
     ref
         .read(mouseYProvider.notifier)
         .update((state) => state = details.position.dy);
+  }
+
+  Future<void> executeAfterPaint() async {
+    await Future.delayed(Duration.zero);
+
+    var sourceCard = ref.watch(startKeyProvider);
+    var targetCard = ref.watch(endKeyProvider);
+
+    if (sourceCard != null && targetCard != null) {
+      var sourceNode = ref.read(cardProvider(sourceCard)).outputNode;
+      var targetNode = ref.read(cardProvider(targetCard)).inputNode;
+
+      var connectedNodes = ref.read(connectedNodeListProvider);
+      connectedNodes.add(
+        Edge(
+          sourceCard: sourceCard,
+          targetCard: targetCard,
+          sourceNode: sourceNode,
+          targetNode: targetNode,
+        ),
+      );
+      ref.read(connectedNodeListProvider.notifier).update((state) {
+        state = connectedNodes;
+        return state;
+      });
+
+      ref.read(startKeyProvider.notifier).update((state) => null);
+      ref.read(endKeyProvider.notifier).update((state) => null);
+    }
   }
 
   Future<void> executeAfterLayout() async {
@@ -95,37 +125,6 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
       }
     }
   }
-
-  Future<void> executeAfterPaint() async {
-    await Future.delayed(Duration.zero);
-
-    // var sourceCard = ref.read(startKeyProvider);
-    // var targetCard = ref.read(endKeyProvider);
-    // var sourceNode = ref.read(cardPositionMapProvider)[sourceCard]?.outputNode;
-    // var targetNode = ref.read(cardPositionMapProvider)[targetCard]?.inputNode;
-
-    // if (sourceCard != null &&
-    //     targetCard != null &&
-    //     sourceNode != null &&
-    //     targetNode != null) {
-    //   var connectedNodes = ref.read(connectedNodeListProvider);
-    //   connectedNodes.add(
-    //     Edge(
-    //       sourceCardKey: sourceCard,
-    //       targetCardKey: targetCard,
-    //       sourceNode: sourceNode,
-    //       targetNode: targetNode,
-    //     ),
-    //   );
-    //   ref.read(connectedNodeListProvider.notifier).update((state) {
-    //     state = connectedNodes;
-    //     return state;
-    //   });
-
-    //   ref.read(startKeyProvider.notifier).update((state) => null);
-    //   ref.read(endKeyProvider.notifier).update((state) => null);
-    // }
-  }
 }
 
 class EdgePainter extends CustomPainter {
@@ -144,10 +143,10 @@ class EdgePainter extends CustomPainter {
 
     if (node.isNotEmpty) {
       for (var n in node) {
-        var sourceNodeKey = ref.watch(cardProvider(n.sourceCardKey)).outputNode;
-        var targetNodeKey = ref.watch(cardProvider(n.targetCardKey)).inputNode;
-        var source = ref.watch(nodeProvider(sourceNodeKey)).position;
-        var target = ref.watch(nodeProvider(targetNodeKey)).position;
+        var sourceNode = ref.watch(cardProvider(n.sourceCard)).outputNode;
+        var targetNode = ref.watch(cardProvider(n.targetCard)).inputNode;
+        var source = ref.watch(nodeProvider(sourceNode)).position;
+        var target = ref.watch(nodeProvider(targetNode)).position;
         if (source != Offset.infinite && target != Offset.infinite) {
           canvas.drawLine(source, target, paint);
         }
@@ -155,15 +154,19 @@ class EdgePainter extends CustomPainter {
     }
 
     if (start != null && end != null) {
-      var sourceNodeKey = ref.watch(cardProvider(start)).outputNode;
-      var targetNodeKey = ref.watch(cardProvider(end)).inputNode;
-      var source = ref.watch(nodeProvider(sourceNodeKey)).position;
-      var target = ref.watch(nodeProvider(targetNodeKey)).position;
+      var sourceNode = ref.watch(cardProvider(start)).outputNode;
+      var targetNode = ref.watch(cardProvider(end)).inputNode;
+      var source = ref.watch(nodeProvider(sourceNode)).position;
+      var target = ref.watch(nodeProvider(targetNode)).position;
       if (source != Offset.infinite && target != Offset.infinite) {
         canvas.drawLine(source, target, paint);
-      } else {
-        canvas.drawLine(source, Offset(mouseX, mouseY), paint);
       }
+    }
+
+    if (start != null) {
+      var sourceNode = ref.watch(cardProvider(start)).outputNode;
+      var source = ref.watch(nodeProvider(sourceNode)).position;
+      canvas.drawLine(source, Offset(mouseX, mouseY), paint);
     }
   }
 

@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:dial_infinite_canvas/src/domain/model/node.dart';
+import 'package:equatable/equatable.dart';
 
-class Edge {
-  Edge({
-    required this.sourceCardKey,
-    required this.targetCardKey,
+class Edge extends Equatable {
+  const Edge({
+    required this.sourceCard,
+    required this.targetCard,
     required this.sourceNode,
     required this.targetNode,
   });
 
-  final GlobalKey sourceCardKey;
-  final GlobalKey targetCardKey;
+  final GlobalKey sourceCard;
+  final GlobalKey targetCard;
 
-  final Node sourceNode;
-  final Node targetNode;
+  final GlobalKey sourceNode;
+  final GlobalKey targetNode;
+
+  @override
+  List<Object?> get props => [sourceCard, targetCard, sourceNode, targetNode];
 }

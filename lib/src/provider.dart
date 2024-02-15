@@ -30,20 +30,9 @@ final groupWidthProvider =
 final startKeyProvider = StateProvider<GlobalKey?>((ref) => null);
 final endKeyProvider = StateProvider<GlobalKey?>((ref) => null);
 final notSetStartNodeProvider = StateProvider<bool>((ref) => true);
-final connectedNodeListProvider = StateProvider<List<Edge>>((ref) => []);
+final connectedNodeListProvider = StateProvider<Set<Edge>>((ref) => <Edge>{});
 final mouseXProvider = StateProvider((ref) => 0.0);
 final mouseYProvider = StateProvider((ref) => 0.0);
-// final edgePainterProvider = Provider(
-//   (ref) => EdgePainter(
-//     // ref: ref.,
-//     node: ref.watch(connectedNodeListProvider),
-//     start: ref.watch(startKeyProvider),
-//     end: ref.watch(endKeyProvider),
-//     // cardPositions: ref.watch(cardPositionMapProvider),
-//     mouseX: ref.watch(mouseXProvider),
-//     mouseY: ref.watch(mouseYProvider),
-//   ),
-// );
 final nodeProvider =
     StateNotifierProvider.family<NodeNotifier, Node, GlobalKey>((ref, key) {
   return NodeNotifier(Node(key: key, position: Offset.infinite));
