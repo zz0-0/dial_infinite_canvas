@@ -33,8 +33,10 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
           child: Stack(
             children: [
               const Background(),
+              // seperate consumer for reducing times to rebuild
               Consumer(
                 builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                  // update provider after build, in the build would cause error
                   executeAfterLayout();
                   return CustomMultiChildLayout(
                     delegate: LayoutDelegate(ref),
@@ -69,15 +71,15 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
 
   Future<void> executeAfterPaint() async {
     await Future.delayed(Duration.zero);
-
+    // save new edge
     var sourceCard = ref.watch(startKeyProvider);
     var targetCard = ref.watch(endKeyProvider);
 
     if (sourceCard != null && targetCard != null) {
-      var sourceNode = ref.read(cardProvider(sourceCard)).outputNode;
-      var targetNode = ref.read(cardProvider(targetCard)).inputNode;
+      var sourceNode = ref.watch(cardProvider(sourceCard)).outputNode;
+      var targetNode = ref.watch(cardProvider(targetCard)).inputNode;
 
-      var connectedNodes = ref.read(connectedNodeListProvider);
+      var connectedNodes = ref.watch(connectedNodeListProvider);
       connectedNodes.add(
         Edge(
           sourceCard: sourceCard,
@@ -98,6 +100,7 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
 
   Future<void> executeAfterLayout() async {
     await Future.delayed(Duration.zero);
+    // save the location of the group
     if (groupClone != null) {
       if (groupClone!.position != Offset.infinite) {
         if (ref.watch(groupProvider(groupClone!.key)) != groupClone) {
@@ -107,7 +110,9 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
         }
       }
     }
+    // print(groupClone!.position);
 
+    // save the position of the card
     if (cardClone != null) {
       if (cardClone!.position != Offset.infinite) {
         if (ref.watch(cardProvider(cardClone!.key)) != cardClone) {
@@ -141,6 +146,7 @@ class EdgePainter extends CustomPainter {
     var mouseX = ref.watch(mouseXProvider);
     var mouseY = ref.watch(mouseYProvider);
 
+    // paint lines on existing nodes
     if (node.isNotEmpty) {
       for (var n in node) {
         var sourceNode = ref.watch(cardProvider(n.sourceCard)).outputNode;
@@ -153,6 +159,7 @@ class EdgePainter extends CustomPainter {
       }
     }
 
+    // add line drawing with starting and ending nodes
     if (start != null && end != null) {
       var sourceNode = ref.watch(cardProvider(start)).outputNode;
       var targetNode = ref.watch(cardProvider(end)).inputNode;
@@ -163,6 +170,7 @@ class EdgePainter extends CustomPainter {
       }
     }
 
+    // add line drawing with only starting node
     if (start != null) {
       var sourceNode = ref.watch(cardProvider(start)).outputNode;
       var source = ref.watch(nodeProvider(sourceNode)).position;
@@ -185,6 +193,7 @@ class LayoutDelegate extends MultiChildLayoutDelegate {
 
   @override
   void performLayout(Size size) {
+    // obtain all keys based on groupLayoutProvider
     var groupLayout = ref.watch(groupLayoutProvider);
     for (var layoutId in groupLayout) {
       var key = layoutId.id;
@@ -194,10 +203,14 @@ class LayoutDelegate extends MultiChildLayoutDelegate {
         final Size currentSize = layoutChild(
             key, BoxConstraints(maxWidth: size.width, maxHeight: size.height));
         if (position != Offset.infinite) {
+          // the existing layout is based on the saved location,
+          // mainly to deal with the situation after dragging and dropping
           positionChild(key, position);
         } else {
+          // add new cards, layout according to default positions,
+          // and for each new card added, the default value increases
           positionChild(key, groupChildPosition);
-          groupClone = group;
+          groupClone = group.copyWith(position: groupChildPosition);
           groupChildPosition += Offset(0, currentSize.height + 5);
         }
       }
@@ -215,8 +228,7 @@ class LayoutDelegate extends MultiChildLayoutDelegate {
           positionChild(key, position);
         } else {
           positionChild(key, cardChildPosition);
-
-          cardClone = card;
+          cardClone = card.copyWith(position: cardChildPosition);
           cardChildPosition += Offset(0, currentSize.height + 5);
         }
       }

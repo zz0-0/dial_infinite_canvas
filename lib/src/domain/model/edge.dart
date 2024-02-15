@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
 
+@immutable
 class Edge extends Equatable {
   const Edge({
     required this.sourceCard,

@@ -78,11 +78,10 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
           type: ResizeType.card,
           child: Draggable(
             feedback: sizedBox,
-            onDragUpdate: (details) {
-              detectOverlapping(details);
-            },
+            onDragUpdate: (details) {},
             onDragEnd: (details) {
               updateCardPosition(details);
+              detectOverlapping(details);
             },
             child: sizedBox,
           ),
@@ -131,28 +130,25 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
     );
   }
 
-  void detectOverlapping(DragUpdateDetails details) {
-    if (details.globalPosition != Offset.infinite) {
-      Offset cardTopLeft = details.globalPosition;
-      Offset cardBottomRight = cardTopLeft +
-          Offset(ref.read(cardWidthProvider(widget.cardKey)),
-              ref.read(cardHeightProvider(widget.cardKey)));
-      var layoutIds = ref.read(groupLayoutProvider);
-      for (var layoutId in layoutIds) {
-        var groupKey = layoutId.id as GlobalKey;
-        var groupTopLeft = ref.watch(groupProvider(groupKey)).position;
-        if (groupTopLeft != Offset.infinite) {
-          var groupBottomRight = groupTopLeft +
-              Offset(ref.read(groupWidthProvider(groupKey)),
-                  ref.read(groupHeightProvider(groupKey)));
-          var overlap = getOverlapPercent(
-              cardTopLeft, cardBottomRight, groupTopLeft, groupBottomRight);
-          var x = overlap.xPer;
-          var y = overlap.yPer;
-          if (x == 1 && y == 1) {
-            ref.read(groupProvider(groupKey).notifier).addCard(widget.cardKey);
-          }
-        }
+  void detectOverlapping(DraggableDetails details) {
+    Offset cardTopLeft = details.offset;
+    Offset cardBottomRight = cardTopLeft +
+        Offset(ref.watch(cardWidthProvider(widget.cardKey)),
+            ref.watch(cardHeightProvider(widget.cardKey)));
+    var layoutIds = ref.watch(groupLayoutProvider);
+    for (var layoutId in layoutIds) {
+      var groupKey = layoutId.id as GlobalKey;
+      var groupTopLeft = ref.watch(groupProvider(groupKey)).position;
+
+      var groupBottomRight = groupTopLeft +
+          Offset(ref.watch(groupWidthProvider(groupKey)),
+              ref.watch(groupHeightProvider(groupKey)));
+      var overlap = getOverlapPercent(
+          cardTopLeft, cardBottomRight, groupTopLeft, groupBottomRight);
+      var x = overlap.xPer;
+      var y = overlap.yPer;
+      if (x == 1 && y == 1) {
+        ref.read(groupProvider(groupKey).notifier).addCard(widget.cardKey);
       }
     }
   }
