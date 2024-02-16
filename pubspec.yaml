@@ -1,6 +1,6 @@
 name: dial_infinite_canvas
 description: "An infinite canvas package written in Dart"
-version: 0.9.8
+version: 0.9.9
 homepage:
 
 environment:

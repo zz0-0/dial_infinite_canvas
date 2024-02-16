@@ -43,6 +43,7 @@ Run the project
   - [x] Pan left, pan right the canvas with the left mouse pressing
 - [x] Card
   - [x] Connect cards' input nodes and output nodes with mouse-clicking
+    - [x] Tap down node animation
   - [x] Drag and drop cards
   - [ ] Different card type
   - [x] Resize cards
@@ -54,6 +55,7 @@ Run the project
     - [ ] top-right
     - [ ] bottom-left
     - [x] bottom-right
+  - [x] Resize cards animation
 - [ ] Group
   - [ ] Group dot type
   - [x] Group cards together
@@ -68,9 +70,11 @@ Run the project
     - [ ] bottom-left
     - [x] bottom-right
     - [ ] dragging after zoomed in or zoomed out
+  - [x] Resize cards animation
 - [ ] Edge
   - [ ] Edge label
   - [ ] Edge type
+- [ ] Theme
 - [ ] Minimap
 - [ ] API
 

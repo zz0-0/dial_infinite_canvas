@@ -50,19 +50,29 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
     var notSetStarNode = ref.watch(notSetStartNodeProvider);
     var sizedBox = Card(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          DropdownMenu(
-            enableSearch: false,
-            initialSelection: CardType.simple,
-            dropdownMenuEntries: CardType.values.map(
-              (e) {
-                return DropdownMenuEntry<CardType>(value: e, label: e.label);
-              },
-            ).toList(),
-            onSelected: (value) => ref
-                .read(cardTypeProvider(widget.cardKey).notifier)
-                .update((state) => state = value!),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(10.0, 10.0, 0, 0),
+            child: Text(
+              "data",
+              textAlign: TextAlign.left,
+            ),
           ),
+          const Divider(),
+          // DropdownMenu(
+          //   enableSearch: false,
+          //   initialSelection: CardType.simple,
+          //   dropdownMenuEntries: CardType.values.map(
+          //     (e) {
+          //       return DropdownMenuEntry<CardType>(value: e, label: e.label);
+          //     },
+          //   ).toList(),
+          //   onSelected: (value) => ref
+          //       .read(cardTypeProvider(widget.cardKey).notifier)
+          //       .update((state) => state = value!),
+          // ),
           SizedBox(
             width: 100,
             height: 100,
@@ -182,18 +192,20 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
   setChildByType(GlobalKey key) {
     switch (ref.watch(cardTypeProvider(key))) {
       case CardType.simple:
-        return const Row(
-          children: [
-            Icon(Icons.abc),
-            Text("data"),
-            Expanded(
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Icon(Icons.check_circle),
-              ),
-            ),
-          ],
-        );
+        return const Column();
+
+      // const Row(
+      //   children: [
+      //     Icon(Icons.abc),
+      //     Text("data"),
+      //     Expanded(
+      //       child: Align(
+      //         alignment: Alignment.centerRight,
+      //         child: Icon(Icons.check_circle),
+      //       ),
+      //     ),
+      //   ],
+      // );
       case CardType.complex:
         return const ListTile(
           title: Text("Title1"),

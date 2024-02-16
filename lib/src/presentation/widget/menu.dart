@@ -14,30 +14,43 @@ class _MenuState extends ConsumerState<Menu> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 200,
+      height: 300,
       width: 100,
-      child: Column(children: [
-        IconButton(
-          onPressed: () => createGroupWidget(ref),
-          icon: const Icon(Icons.add_home_outlined),
-        ),
-        IconButton(
-          onPressed: () => createInfoCardWidget(ref),
-          icon: const Icon(Icons.add_box_outlined),
-        ),
-        IconButton(
-          onPressed: () => resetCanvasZoomLevel(),
-          icon: const Icon(Icons.restore_page_outlined),
-        ),
-        IconButton(
-          onPressed: () => zoomIn(ref),
-          icon: const Icon(Icons.arrow_circle_up),
-        ),
-        IconButton(
-          onPressed: () => zoomOut(ref),
-          icon: const Icon(Icons.arrow_circle_down),
-        )
-      ]),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          FloatingActionButton(
+            onPressed: () => createGroupWidget(ref),
+            mini: true,
+            tooltip: "Add Group",
+            child: const Icon(Icons.add_home_outlined),
+          ),
+          FloatingActionButton(
+            onPressed: () => createInfoCardWidget(ref),
+            mini: true,
+            tooltip: "Add Card",
+            child: const Icon(Icons.add_box_outlined),
+          ),
+          FloatingActionButton(
+            onPressed: () => resetCanvasZoomLevel(),
+            mini: true,
+            tooltip: "Reset Zoom",
+            child: const Icon(Icons.restore_page_outlined),
+          ),
+          FloatingActionButton(
+            onPressed: () => zoomIn(ref),
+            mini: true,
+            tooltip: "Zoom in",
+            child: const Icon(Icons.arrow_circle_up),
+          ),
+          FloatingActionButton(
+            onPressed: () => zoomOut(ref),
+            mini: true,
+            tooltip: "Zoom out",
+            child: const Icon(Icons.arrow_circle_down),
+          ),
+        ],
+      ),
     );
   }
 
