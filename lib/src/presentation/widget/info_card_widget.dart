@@ -53,11 +53,26 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(10.0, 10.0, 0, 0),
-            child: Text(
-              "data",
-              textAlign: TextAlign.left,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10.0, 10.0, 0, 0),
+            child: Row(
+              children: [
+                const Text(
+                  "data",
+                  textAlign: TextAlign.left,
+                ),
+                PopupMenuButton(
+                  onSelected: handleClick,
+                  itemBuilder: (BuildContext context) {
+                    return {'Logout', 'Settings'}.map((String value) {
+                      return PopupMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList();
+                  },
+                ),
+              ],
             ),
           ),
           const Divider(),
@@ -258,5 +273,14 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
     yPer = yOverlap / yTotal;
 
     return Overlap(xPer: xPer, yPer: yPer);
+  }
+
+  void handleClick(String value) {
+    switch (value) {
+      case 'Logout':
+        break;
+      case 'Settings':
+        break;
+    }
   }
 }

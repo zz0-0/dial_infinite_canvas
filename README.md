@@ -13,7 +13,7 @@ This is an infinite canvas package written in Dart.
 Clone the project
 
 ```bash
-git clone https://github.com/zz0-0/dial-infinite-canvas
+git clone https://github.com/zz0-0/dial_infinite_canvas
 ```
 
 Go to the project directory
@@ -31,7 +31,13 @@ flutter pub get
 Run the project
 
 - Option 1: VSCode
-  - cd example/lib, click Run in the main.dart
+
+```bash
+cd example/lib
+```
+
+- main.dart
+  - click Run
 
 ## Features
 
@@ -72,10 +78,9 @@ Run the project
     - [ ] dragging after zoomed in or zoomed out
   - [x] Resize cards animation
 - [ ] Edge
+  - [ ] Animation on hover
   - [ ] Edge label
   - [ ] Edge type
-- [ ] Theme
-- [ ] Minimap
 - [ ] API
 
 ## Authors
