@@ -14,17 +14,13 @@ class _EdgeWidgetState extends ConsumerState<EdgeWidget> {
   @override
   Widget build(BuildContext context) {
     executeAfterPaint();
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        mouseCursor: SystemMouseCursors.grab,
-        onTap: () {
-          print("Tapped");
-        },
-        child: CustomPaint(
-          painter: EdgePainter(ref),
-          size: const Size(100, 100),
-        ),
+    return GestureDetector(
+      onTap: () {
+        print("object");
+      },
+      child: CustomPaint(
+        painter: EdgePainter(ref),
+        child: Container(),
       ),
     );
   }
@@ -62,10 +58,12 @@ class _EdgeWidgetState extends ConsumerState<EdgeWidget> {
 class EdgePainter extends CustomPainter {
   WidgetRef ref;
   EdgePainter(this.ref);
-
+  Path p = Path();
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = Colors.blue;
+    paint.style = PaintingStyle.stroke;
+    paint.strokeWidth = 10;
 
     var node = ref.watch(connectedNodeListProvider);
     var start = ref.watch(startKeyProvider);
@@ -81,7 +79,11 @@ class EdgePainter extends CustomPainter {
         var source = ref.watch(nodeProvider(sourceNode)).position;
         var target = ref.watch(nodeProvider(targetNode)).position;
         if (source != Offset.infinite && target != Offset.infinite) {
-          canvas.drawLine(source, target, paint);
+          // canvas.drawLine(source, target, paint);
+          p.moveTo(source.dx, source.dy);
+          p.lineTo(target.dx, target.dy);
+          p.close();
+          canvas.drawPath(p, paint);
         }
       }
     }
@@ -93,7 +95,11 @@ class EdgePainter extends CustomPainter {
       var source = ref.watch(nodeProvider(sourceNode)).position;
       var target = ref.watch(nodeProvider(targetNode)).position;
       if (source != Offset.infinite && target != Offset.infinite) {
-        canvas.drawLine(source, target, paint);
+        // canvas.drawLine(source, target, paint);
+        p.moveTo(source.dx, source.dy);
+        p.lineTo(target.dx, target.dy);
+        p.close();
+        canvas.drawPath(p, paint);
       }
     }
 
@@ -101,10 +107,20 @@ class EdgePainter extends CustomPainter {
     if (start != null) {
       var sourceNode = ref.watch(cardProvider(start)).outputNode;
       var source = ref.watch(nodeProvider(sourceNode)).position;
-      canvas.drawLine(source, Offset(mouseX, mouseY), paint);
+      // canvas.drawLine(source, Offset(mouseX, mouseY), paint);
+      p.moveTo(source.dx, source.dy);
+      p.lineTo(mouseX, mouseY);
+      p.close();
+      canvas.drawPath(p, paint);
     }
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+
+  @override
+  bool hitTest(Offset position) {
+    print(p.contains(position));
+    return p.contains(position);
+  }
 }
