@@ -15,9 +15,7 @@ class _EdgeWidgetState extends ConsumerState<EdgeWidget> {
   Widget build(BuildContext context) {
     executeAfterPaint();
     return GestureDetector(
-      onTap: () {
-        print("object");
-      },
+      onTap: () {},
       child: CustomPaint(
         painter: EdgePainter(ref),
         child: Container(),
@@ -120,7 +118,6 @@ class EdgePainter extends CustomPainter {
 
   @override
   bool hitTest(Offset position) {
-    print(p.contains(position));
     return p.contains(position);
   }
 }

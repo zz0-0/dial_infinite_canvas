@@ -39,112 +39,103 @@ class _ResizerState extends ConsumerState<Resizer> {
       default:
     }
 
-    return SizedBox(
-      width: width,
-      height: height,
-      child: Stack(
-        children: [
-          Positioned(
-            top: top,
-            left: left,
-            child: SizedBox(
-              width: width,
-              height: height,
-              child: widget.child,
-            ),
-          ),
-          // 右
-          Positioned(
-            top: top,
-            left: left + width - 20,
-            height: height - 20,
-            width: 20,
-            child: InkWell(
-              mouseCursor: SystemMouseCursors.resizeRight,
-              onTap: () {},
-              onHover: (value) {
-                setState(() {
-                  isHovering = value;
-                });
-              },
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.ease,
-                decoration: BoxDecoration(
-                  color: isHovering ? Colors.green : null,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: GestureDetector(
-                  onPanStart: (details) =>
-                      startDrag(details, ResizeDirection.right),
-                  onPanUpdate: (details) =>
-                      updateDrag(details, ResizeDirection.right, widget.type),
-                ),
+    return Stack(
+      children: [
+        Positioned.fromRect(
+          rect: Rect.fromLTWH(left, top, width, height),
+          child: widget.child,
+        ),
+        // 右
+        Positioned(
+          top: top,
+          left: left + width - 20,
+          height: height - 20,
+          width: 20,
+          child: InkWell(
+            mouseCursor: SystemMouseCursors.resizeRight,
+            onTap: () {},
+            onHover: (value) {
+              setState(() {
+                isHovering = value;
+              });
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.ease,
+              decoration: BoxDecoration(
+                color: isHovering ? Colors.green : null,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: GestureDetector(
+                onPanStart: (details) =>
+                    startDrag(details, ResizeDirection.right),
+                onPanUpdate: (details) =>
+                    updateDrag(details, ResizeDirection.right, widget.type),
               ),
             ),
           ),
-          // 下
-          Positioned(
-            top: top + height - 20,
-            left: left,
-            height: 20,
-            width: width - 20,
-            child: InkWell(
-              mouseCursor: SystemMouseCursors.resizeDown,
-              onTap: () {},
-              onHover: (value) {
-                setState(() {
-                  isHovering = value;
-                });
-              },
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.ease,
-                decoration: BoxDecoration(
-                  color: isHovering ? Colors.green : null,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: GestureDetector(
-                  onPanStart: (details) =>
-                      startDrag(details, ResizeDirection.bottom),
-                  onPanUpdate: (details) =>
-                      updateDrag(details, ResizeDirection.bottom, widget.type),
-                ),
+        ),
+        // 下
+        Positioned(
+          top: top + height - 20,
+          left: left,
+          height: 20,
+          width: width - 20,
+          child: InkWell(
+            mouseCursor: SystemMouseCursors.resizeDown,
+            onTap: () {},
+            onHover: (value) {
+              setState(() {
+                isHovering = value;
+              });
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.ease,
+              decoration: BoxDecoration(
+                color: isHovering ? Colors.green : null,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: GestureDetector(
+                onPanStart: (details) =>
+                    startDrag(details, ResizeDirection.bottom),
+                onPanUpdate: (details) =>
+                    updateDrag(details, ResizeDirection.bottom, widget.type),
               ),
             ),
           ),
-          // 右下
-          Positioned(
-            top: top + height - 20,
-            left: left + width - 20,
-            height: 20,
-            width: 20,
-            child: InkWell(
-              mouseCursor: SystemMouseCursors.resizeDownRight,
-              onTap: () {},
-              onHover: (value) {
-                setState(() {
-                  isHovering = value;
-                });
-              },
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.ease,
-                decoration: BoxDecoration(
-                  color: isHovering ? Colors.green : null,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: GestureDetector(
-                  onPanStart: (details) =>
-                      startDrag(details, ResizeDirection.bottomRight),
-                  onPanUpdate: (details) => updateDrag(
-                      details, ResizeDirection.bottomRight, widget.type),
-                ),
+        ),
+        // 右下
+        Positioned(
+          top: top + height - 20,
+          left: left + width - 20,
+          height: 20,
+          width: 20,
+          child: InkWell(
+            mouseCursor: SystemMouseCursors.resizeDownRight,
+            onTap: () {},
+            onHover: (value) {
+              setState(() {
+                isHovering = value;
+              });
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.ease,
+              decoration: BoxDecoration(
+                color: isHovering ? Colors.green : null,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: GestureDetector(
+                onPanStart: (details) =>
+                    startDrag(details, ResizeDirection.bottomRight),
+                onPanUpdate: (details) => updateDrag(
+                    details, ResizeDirection.bottomRight, widget.type),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

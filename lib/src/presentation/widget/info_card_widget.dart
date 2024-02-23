@@ -133,7 +133,7 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
         ),
         Positioned(
           top: 100,
-          right: 0,
+          left: 190,
           child: InkWell(
             mouseCursor: SystemMouseCursors.alias,
             child: GestureDetector(
