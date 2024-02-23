@@ -28,7 +28,6 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
         clipBehavior: Clip.none,
         constrained: false,
         child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
           onTap: removeSelectedCardBorder,
           child: SizedBox(
             width: 2 * canvasWidth,
@@ -36,6 +35,7 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
             child: Stack(
               children: [
                 const Background(),
+                const EdgeWidget(),
                 // seperate consumer for reducing times to rebuild
                 Consumer(
                   builder:
@@ -51,7 +51,6 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
                     );
                   },
                 ),
-                const EdgeWidget(),
                 // Consumer(builder:
                 //     (BuildContext context, WidgetRef ref, Widget? child) {
                 //   return const EdgeWidget();

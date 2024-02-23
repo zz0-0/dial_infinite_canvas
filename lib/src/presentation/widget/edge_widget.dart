@@ -10,12 +10,20 @@ class EdgeWidget extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _EdgeWidgetState();
 }
 
+bool drawArc = false;
+
 class _EdgeWidgetState extends ConsumerState<EdgeWidget> {
   @override
   Widget build(BuildContext context) {
     executeAfterPaint();
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {},
+      onLongPress: () {
+        setState(() {
+          drawArc = true;
+        });
+      },
       child: CustomPaint(
         painter: EdgePainter(ref),
         child: Container(),
@@ -30,6 +38,9 @@ class _EdgeWidgetState extends ConsumerState<EdgeWidget> {
     var targetCard = ref.watch(endKeyProvider);
 
     if (sourceCard != null && targetCard != null) {
+      ref.watch(cardProvider(sourceCard));
+      ref.watch(cardProvider(targetCard));
+
       var sourceNode = ref.watch(cardProvider(sourceCard)).outputNode;
       var targetNode = ref.watch(cardProvider(targetCard)).inputNode;
 
@@ -77,11 +88,14 @@ class EdgePainter extends CustomPainter {
         var source = ref.watch(nodeProvider(sourceNode)).position;
         var target = ref.watch(nodeProvider(targetNode)).position;
         if (source != Offset.infinite && target != Offset.infinite) {
-          // canvas.drawLine(source, target, paint);
-          p.moveTo(source.dx, source.dy);
-          p.lineTo(target.dx, target.dy);
-          p.close();
-          canvas.drawPath(p, paint);
+          if (!drawArc) {
+            p.moveTo(source.dx, source.dy);
+            p.lineTo(target.dx, target.dy);
+            p.close();
+            canvas.drawPath(p, paint);
+            Rect rect = const Offset(0, 0) & Size(size.width, size.height);
+            canvas.drawRect(rect, paint);
+          }
         }
       }
     }
