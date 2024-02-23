@@ -53,6 +53,28 @@ cd example/lib
   - [x] Border show on the selected card
   - [x] Drag and drop cards
   - [ ] Different card type
+    - [ ] Bank debit
+    - [ ] Contact
+      - [ ] Person
+      - [ ] Address
+    - [ ] Product
+      - [ ] Place
+      - [ ] Sale
+      - [ ] Movie
+      - [ ] Book
+    - [ ] Flight
+    - [ ] Markdown
+      - [ ] Media/News
+      - [ ] Note
+    - [ ] Chart
+    - [ ] Call to action
+    - [ ] List table
+    - [ ] Login
+    - [ ] Review
+    - [ ] Color picker
+    - [ ] Specturm
+    - [ ] Thermometer
+  - [ ] Stacked Card Navigation
   - [x] Resize cards
     - [ ] top
     - [x] bottom
