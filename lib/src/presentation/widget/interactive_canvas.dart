@@ -28,6 +28,7 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
         clipBehavior: Clip.none,
         constrained: false,
         child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: removeSelectedCardBorder,
           child: SizedBox(
             width: 2 * canvasWidth,

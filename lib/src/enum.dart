@@ -1,4 +1,5 @@
 enum ResizeDirection {
+  left("LEFT"),
   bottom("BOTTOM"),
   right("RIGHT"),
   bottomRight("BOTTOMRIGHT");

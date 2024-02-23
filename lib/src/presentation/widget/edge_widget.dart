@@ -17,7 +17,6 @@ class _EdgeWidgetState extends ConsumerState<EdgeWidget> {
   Widget build(BuildContext context) {
     executeAfterPaint();
     return GestureDetector(
-      behavior: HitTestBehavior.translucent,
       onTap: () {},
       onLongPress: () {
         setState(() {

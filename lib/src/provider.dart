@@ -53,8 +53,8 @@ final cardProvider =
     InfoCard(
       key: key,
       position: Offset.infinite,
-      height: ref.watch(cardHeightProvider(key)),
-      width: ref.watch(cardWidthProvider(key)),
+      height: 0,
+      width: 0,
       inputNode: key1,
       outputNode: key2,
     ),
