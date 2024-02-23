@@ -27,38 +27,43 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
         boundaryMargin: const EdgeInsets.all(0),
         clipBehavior: Clip.none,
         constrained: false,
-        child: SizedBox(
-          width: 2 * canvasWidth,
-          height: 2 * canvasHeight,
-          child: Stack(
-            children: [
-              const Background(),
-              // seperate consumer for reducing times to rebuild
-              Consumer(
-                builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                  // update provider after build, in the build would cause error
-                  executeAfterLayout();
-                  return CustomMultiChildLayout(
-                    delegate: LayoutDelegate(ref),
-                    children: [
-                      ...ref.watch(groupLayoutProvider),
-                      ...ref.watch(cardLayoutProvider),
-                    ],
-                  );
-                },
-              ),
-              const EdgeWidget(),
-              // Consumer(builder:
-              //     (BuildContext context, WidgetRef ref, Widget? child) {
-              //   return const EdgeWidget();
-              // }),
-              // Consumer(
-              //   builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: removeSelectedCardBorder,
+          child: SizedBox(
+            width: 2 * canvasWidth,
+            height: 2 * canvasHeight,
+            child: Stack(
+              children: [
+                const Background(),
+                // seperate consumer for reducing times to rebuild
+                Consumer(
+                  builder:
+                      (BuildContext context, WidgetRef ref, Widget? child) {
+                    // update provider after build, in the build would cause error
+                    executeAfterLayout();
+                    return CustomMultiChildLayout(
+                      delegate: LayoutDelegate(ref),
+                      children: [
+                        ...ref.watch(groupLayoutProvider),
+                        ...ref.watch(cardLayoutProvider),
+                      ],
+                    );
+                  },
+                ),
+                const EdgeWidget(),
+                // Consumer(builder:
+                //     (BuildContext context, WidgetRef ref, Widget? child) {
+                //   return const EdgeWidget();
+                // }),
+                // Consumer(
+                //   builder: (BuildContext context, WidgetRef ref, Widget? child) {
 
-              //     return CustomPaint(painter: EdgePainter(ref));
-              //   },
-              // ),
-            ],
+                //     return CustomPaint(painter: EdgePainter(ref));
+                //   },
+                // ),
+              ],
+            ),
           ),
         ),
       ),
@@ -106,6 +111,19 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
       }
     }
     cardClone = null;
+  }
+
+  void removeSelectedCardBorder() {
+    var cardLayout = ref.watch(cardLayoutProvider);
+    for (var layoutId in cardLayout) {
+      var key = layoutId.id;
+      var card = ref.watch(cardProvider(key as GlobalKey));
+      if (ref.watch(cardSelectedProvider(card.key)) == true) {
+        ref
+            .watch(cardSelectedProvider(card.key).notifier)
+            .update((state) => false);
+      }
+    }
   }
 }
 

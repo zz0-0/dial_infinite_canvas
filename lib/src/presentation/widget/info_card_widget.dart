@@ -47,53 +47,66 @@ enum CardType {
 class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
   @override
   Widget build(BuildContext context) {
+    bool selected = ref.watch(cardSelectedProvider(widget.cardKey));
     var notSetStarNode = ref.watch(notSetStartNodeProvider);
     var sizedBox = Card(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10.0, 10.0, 0, 0),
-            child: Row(
-              children: [
-                const Text(
-                  "data",
-                  textAlign: TextAlign.left,
-                ),
-                PopupMenuButton(
-                  onSelected: handleClick,
-                  itemBuilder: (BuildContext context) {
-                    return {'Logout', 'Settings'}.map((String value) {
-                      return PopupMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList();
-                  },
-                ),
-              ],
+      shape: selected
+          ? RoundedRectangleBorder(
+              side: const BorderSide(color: Colors.blue, width: 2.0),
+              borderRadius: BorderRadius.circular(4.0))
+          : null,
+      child: InkWell(
+        onTap: () {
+          ref
+              .read(cardSelectedProvider(widget.cardKey).notifier)
+              .update((state) => true);
+        },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10.0, 10.0, 0, 0),
+              child: Row(
+                children: [
+                  const Text(
+                    "data",
+                    textAlign: TextAlign.left,
+                  ),
+                  PopupMenuButton(
+                    onSelected: handleClick,
+                    itemBuilder: (BuildContext context) {
+                      return {'Logout', 'Settings'}.map((String value) {
+                        return PopupMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList();
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-          const Divider(),
-          // DropdownMenu(
-          //   enableSearch: false,
-          //   initialSelection: CardType.simple,
-          //   dropdownMenuEntries: CardType.values.map(
-          //     (e) {
-          //       return DropdownMenuEntry<CardType>(value: e, label: e.label);
-          //     },
-          //   ).toList(),
-          //   onSelected: (value) => ref
-          //       .read(cardTypeProvider(widget.cardKey).notifier)
-          //       .update((state) => state = value!),
-          // ),
-          SizedBox(
-            width: 100,
-            height: 100,
-            child: setChildByType(widget.cardKey),
-          )
-        ],
+            const Divider(),
+            // DropdownMenu(
+            //   enableSearch: false,
+            //   initialSelection: CardType.simple,
+            //   dropdownMenuEntries: CardType.values.map(
+            //     (e) {
+            //       return DropdownMenuEntry<CardType>(value: e, label: e.label);
+            //     },
+            //   ).toList(),
+            //   onSelected: (value) => ref
+            //       .read(cardTypeProvider(widget.cardKey).notifier)
+            //       .update((state) => state = value!),
+            // ),
+            SizedBox(
+              width: 100,
+              height: 100,
+              child: setChildByType(widget.cardKey),
+            )
+          ],
+        ),
       ),
     );
     return Stack(

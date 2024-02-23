@@ -17,6 +17,8 @@ final canvasHeightProvider = StateProvider<double>((ref) => 1000.0);
 final canvasWidthProvider = StateProvider<double>((ref) => 1000.0);
 final divisionsProvider = StateProvider<int>((ref) => 2);
 final subdivisionsProvider = StateProvider<int>((ref) => 2);
+
+// resize
 final cardHeightProvider =
     StateProvider.family<double, GlobalKey>((ref, key) => 200);
 final cardWidthProvider =
@@ -86,3 +88,7 @@ final transformationControllerProvider = Provider((ref) {
 // detail card info
 final cardTypeProvider =
     StateProvider.family<CardType, GlobalKey>((ref, id) => CardType.simple);
+
+// card border
+final cardSelectedProvider =
+    StateProvider.family<bool, GlobalKey>((ref, key) => false);

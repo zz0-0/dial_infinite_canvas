@@ -50,6 +50,7 @@ cd example/lib
 - [x] Card
   - [x] Connect cards' input nodes and output nodes with mouse-clicking
     - [x] Tap down node animation
+  - [x] Border show on the selected card
   - [x] Drag and drop cards
   - [ ] Different card type
   - [x] Resize cards
