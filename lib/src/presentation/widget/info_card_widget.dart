@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:dial_infinite_canvas/src/enum.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,6 +50,7 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
   Widget build(BuildContext context) {
     bool selected = ref.watch(cardSelectedProvider(widget.cardKey));
     var notSetStarNode = ref.watch(notSetStartNodeProvider);
+    // card 1
     var column = Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -75,19 +77,6 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
               ),
             ],
           ),
-          // const Divider(),
-          // DropdownMenu(
-          //   enableSearch: false,
-          //   initialSelection: CardType.simple,
-          //   dropdownMenuEntries: CardType.values.map(
-          //     (e) {
-          //       return DropdownMenuEntry<CardType>(value: e, label: e.label);
-          //     },
-          //   ).toList(),
-          //   onSelected: (value) => ref
-          //       .read(cardTypeProvider(widget.cardKey).notifier)
-          //       .update((state) => state = value!),
-          // ),
           SizedBox(
             width: 100,
             height: 100,
@@ -97,19 +86,42 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
       ),
     );
 
+    // card with background image
+    var column1 = Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: NetworkImage("https://picsum.photos/250?image=9")),
+          ),
+        ),
+        const Positioned(
+          bottom: -4,
+          left: -4,
+          width: 200,
+          height: 65,
+          child: Card(
+              // height: 20,
+              // decoration: const BoxDecoration(color: Colors.white),
+              ),
+        ),
+      ],
+    );
+
     var sizedBox = Card(
       shape: selected
           ? RoundedRectangleBorder(
               side: const BorderSide(color: Colors.blue, width: 2.0),
               borderRadius: BorderRadius.circular(4.0))
           : null,
+      clipBehavior: Clip.antiAliasWithSaveLayer,
       child: InkWell(
         onTap: () {
           ref
               .read(cardSelectedProvider(widget.cardKey).notifier)
               .update((state) => true);
         },
-        child: column,
+        child: column1,
       ),
     );
     return Stack(
