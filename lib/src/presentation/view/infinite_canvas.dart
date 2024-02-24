@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dial_minimap/dial_minimap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dial_infinite_canvas/src/provider.dart';
 import 'package:dial_infinite_canvas/src/presentation/widget/menu.dart';
@@ -75,7 +76,8 @@ class _InfiniteCanvasState extends ConsumerState<InfiniteCanvas> {
         builder: (context, constraints) {
           return Stack(
             children: [
-              const InteractiveCanvas(),
+              // const InteractiveCanvas(),
+              const MinimapScreen(widget: InteractiveCanvas()),
               Positioned(
                 left: ref.watch(menuLeftPositionProvider),
                 bottom: ref.watch(menuBottomPositionProvider),

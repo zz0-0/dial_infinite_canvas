@@ -217,6 +217,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.4"
+  dial_minimap:
+    dependency: "direct main"
+    description:
+      path: "../dial_minimap"
+      relative: true
+    source: path
+    version: "0.1.0"
   dotted_border:
     dependency: "direct main"
     description:

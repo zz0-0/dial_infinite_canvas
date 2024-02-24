@@ -8,6 +8,31 @@ This is an infinite canvas package written in Dart.
 
 **State Management:** Riverpod
 
+## Install package and use it in your project
+
+**Ignore this section, the package hasn't been uploaded to pub.dev yet.**
+
+- Option 1: Flutter CLI
+
+```bash
+flutter pub get dial_infinite_canvas
+```
+
+- Option 2: Add to pubspec.yaml
+
+```yaml
+dependencies:
+  dial_infinite_canvas: ^0.10.8
+```
+
+or, add by path:
+
+```yaml
+dependencies:
+  dial_infinite_canvas:
+    path: ../dial_infinite_canvas
+```
+
 ## Run Locally
 
 Clone the project
@@ -34,6 +59,15 @@ Run the project
 
 ```bash
 cd example/lib
+# click Run in Run|Debug|Profile
+```
+
+- Option 2: Flutter CLI
+
+```bash
+cd example/lib
+flutter run
+# pick the platform you want to run with
 ```
 
 - main.dart
