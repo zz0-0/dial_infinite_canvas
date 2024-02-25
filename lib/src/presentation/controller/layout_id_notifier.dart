@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:dial_infinite_canvas/src/enum.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dial_infinite_canvas/src/presentation/widget/group_widget.dart';
 import 'package:dial_infinite_canvas/src/presentation/widget/info_card_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LayoutIdNotifier extends StateNotifier<List<LayoutId>> {
   LayoutIdNotifier() : super([]);

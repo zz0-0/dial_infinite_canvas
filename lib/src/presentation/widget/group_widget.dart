@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:dial_infinite_canvas/src/enum.dart';
-import 'package:dial_infinite_canvas/src/provider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dial_infinite_canvas/src/presentation/widget/resizer.dart';
+import 'package:dial_infinite_canvas/src/provider.dart';
+import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class GroupWidget extends ConsumerStatefulWidget {
   const GroupWidget({
@@ -20,9 +20,9 @@ class GroupWidget extends ConsumerStatefulWidget {
 class _GroupWidgetState extends ConsumerState<GroupWidget> {
   @override
   Widget build(BuildContext context) {
-    var height = ref.watch(groupHeightProvider(widget.groupKey));
-    var width = ref.watch(groupWidthProvider(widget.groupKey));
-    var dottedBorder = DottedBorder(
+    final height = ref.watch(groupHeightProvider(widget.groupKey));
+    final width = ref.watch(groupWidthProvider(widget.groupKey));
+    final dottedBorder = DottedBorder(
       color: Colors.white,
       strokeWidth: 3,
       dashPattern: const [10, 6],
@@ -45,14 +45,14 @@ class _GroupWidgetState extends ConsumerState<GroupWidget> {
   }
 
   void updateGroupPosition(DraggableDetails details) {
-    var oldPosition = ref.watch(groupProvider(widget.groupKey)).position;
-    var diff = details.offset - oldPosition;
+    final oldPosition = ref.watch(groupProvider(widget.groupKey)).position;
+    final diff = details.offset - oldPosition;
     ref
         .read(groupProvider(widget.groupKey).notifier)
         .updatePosition(details.offset);
-    var cards = ref.watch(groupProvider(widget.groupKey)).cards;
+    final cards = ref.watch(groupProvider(widget.groupKey)).cards;
     for (var card in cards) {
-      var position = ref.read(cardProvider(card)).position;
+      final position = ref.read(cardProvider(card)).position;
       ref.read(cardProvider(card).notifier).updatePosition(position + diff);
     }
   }

@@ -1,6 +1,6 @@
+import 'package:dial_infinite_canvas/src/domain/model/group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:dial_infinite_canvas/src/domain/model/group.dart';
 
 class GroupNotifier extends StateNotifier<Group> {
   GroupNotifier(super.state);

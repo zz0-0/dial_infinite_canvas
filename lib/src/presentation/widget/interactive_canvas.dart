@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:dial_infinite_canvas/src/provider.dart';
 import 'package:dial_infinite_canvas/src/domain/model/group.dart';
 import 'package:dial_infinite_canvas/src/domain/model/info_card.dart';
 import 'package:dial_infinite_canvas/src/presentation/widget/background.dart';
 import 'package:dial_infinite_canvas/src/presentation/widget/edge_widget.dart';
+import 'package:dial_infinite_canvas/src/provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class InteractiveCanvas extends ConsumerStatefulWidget {
   const InteractiveCanvas({super.key});

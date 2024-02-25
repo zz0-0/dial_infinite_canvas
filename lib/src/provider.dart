@@ -1,14 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:dial_infinite_canvas/src/domain/model/node.dart';
 import 'package:dial_infinite_canvas/src/domain/model/edge.dart';
 import 'package:dial_infinite_canvas/src/domain/model/group.dart';
 import 'package:dial_infinite_canvas/src/domain/model/info_card.dart';
-import 'package:dial_infinite_canvas/src/presentation/widget/info_card_widget.dart';
-import 'package:dial_infinite_canvas/src/presentation/controller/node_notifier.dart';
+import 'package:dial_infinite_canvas/src/domain/model/node.dart';
 import 'package:dial_infinite_canvas/src/presentation/controller/group_notifier.dart';
-import 'package:dial_infinite_canvas/src/presentation/controller/layout_id_notifier.dart';
 import 'package:dial_infinite_canvas/src/presentation/controller/info_card_notifier.dart';
+import 'package:dial_infinite_canvas/src/presentation/controller/layout_id_notifier.dart';
+import 'package:dial_infinite_canvas/src/presentation/controller/node_notifier.dart';
+import 'package:dial_infinite_canvas/src/presentation/widget/info_card_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // default
 final menuLeftPositionProvider = StateProvider<double>((ref) => 10);

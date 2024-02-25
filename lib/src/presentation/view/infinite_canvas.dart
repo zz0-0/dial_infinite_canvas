@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:dial_minimap/dial_minimap.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:dial_infinite_canvas/src/provider.dart';
-import 'package:dial_infinite_canvas/src/presentation/widget/menu.dart';
 import 'package:dial_infinite_canvas/src/presentation/widget/interactive_canvas.dart';
+import 'package:dial_infinite_canvas/src/presentation/widget/menu.dart';
+import 'package:dial_infinite_canvas/src/provider.dart';
+import 'package:dial_minimap/dial_minimap.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class InfiniteCanvas extends ConsumerStatefulWidget {
   const InfiniteCanvas({

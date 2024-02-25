@@ -1,11 +1,12 @@
 import 'dart:math';
-import 'package:flutter/material.dart';
-import 'package:readmore/readmore.dart';
-import 'package:dial_infinite_canvas/src/enum.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:dial_infinite_canvas/src/provider.dart';
+
 import 'package:dial_infinite_canvas/src/domain/model/overlap.dart';
+import 'package:dial_infinite_canvas/src/enum.dart';
 import 'package:dial_infinite_canvas/src/presentation/widget/resizer.dart';
+import 'package:dial_infinite_canvas/src/provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:readmore/readmore.dart';
 
 class InfoCardWidget extends ConsumerStatefulWidget {
   final GlobalKey cardKey;
@@ -48,13 +49,12 @@ enum CardType {
 class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
   @override
   Widget build(BuildContext context) {
-    bool selected = ref.watch(cardSelectedProvider(widget.cardKey));
-    var notSetStarNode = ref.watch(notSetStartNodeProvider);
+    final bool selected = ref.watch(cardSelectedProvider(widget.cardKey));
+    final notSetStarNode = ref.watch(notSetStartNodeProvider);
     // card 1
-    var column = Padding(
+    final column = Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -81,18 +81,19 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
             width: 100,
             height: 100,
             child: setChildByType(widget.cardKey),
-          )
+          ),
         ],
       ),
     );
 
     // card with background image
-    var column1 = Stack(
+    final column1 = Stack(
       children: [
         Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-                image: NetworkImage("https://picsum.photos/250?image=9")),
+              image: NetworkImage("https://picsum.photos/250?image=9"),
+            ),
           ),
         ),
         const Positioned(
@@ -110,10 +111,9 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
       // simple card with title and content
     );
 
-    var column2 = const Padding(
+    const column2 = Padding(
       padding: EdgeInsets.all(16),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -124,19 +124,19 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
           ReadMoreText(
             'Flutter is Google’s mobile UI open source framework to build high-quality native (super fast) interfaces for iOS and Android apps with the unified codebase.',
             trimMode: TrimMode.Line,
-            trimLines: 2,
             trimCollapsedText: 'Show more',
             trimExpandedText: 'Show less',
-          )
+          ),
         ],
       ),
     );
 
-    var sizedBox = Card(
+    final sizedBox = Card(
       shape: selected
           ? RoundedRectangleBorder(
               side: const BorderSide(color: Colors.blue, width: 2.0),
-              borderRadius: BorderRadius.circular(4.0))
+              borderRadius: BorderRadius.circular(4.0),
+            )
           : null,
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: InkWell(
@@ -209,22 +209,30 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
   }
 
   void detectOverlapping(DraggableDetails details) {
-    Offset cardTopLeft = details.offset;
-    Offset cardBottomRight = cardTopLeft +
-        Offset(ref.watch(cardWidthProvider(widget.cardKey)),
-            ref.watch(cardHeightProvider(widget.cardKey)));
-    var layoutIds = ref.watch(groupLayoutProvider);
-    for (var layoutId in layoutIds) {
-      var groupKey = layoutId.id as GlobalKey;
-      var groupTopLeft = ref.watch(groupProvider(groupKey)).position;
+    final Offset cardTopLeft = details.offset;
+    final Offset cardBottomRight = cardTopLeft +
+        Offset(
+          ref.watch(cardWidthProvider(widget.cardKey)),
+          ref.watch(cardHeightProvider(widget.cardKey)),
+        );
+    final layoutIds = ref.watch(groupLayoutProvider);
+    for (final layoutId in layoutIds) {
+      final groupKey = layoutId.id as GlobalKey;
+      final groupTopLeft = ref.watch(groupProvider(groupKey)).position;
 
-      var groupBottomRight = groupTopLeft +
-          Offset(ref.watch(groupWidthProvider(groupKey)),
-              ref.watch(groupHeightProvider(groupKey)));
-      var overlap = getOverlapPercent(
-          cardTopLeft, cardBottomRight, groupTopLeft, groupBottomRight);
-      var x = overlap.xPer;
-      var y = overlap.yPer;
+      final groupBottomRight = groupTopLeft +
+          Offset(
+            ref.watch(groupWidthProvider(groupKey)),
+            ref.watch(groupHeightProvider(groupKey)),
+          );
+      final overlap = getOverlapPercent(
+        cardTopLeft,
+        cardBottomRight,
+        groupTopLeft,
+        groupBottomRight,
+      );
+      final x = overlap.xPer;
+      final y = overlap.yPer;
       if (x == 1 && y == 1) {
         ref.read(groupProvider(groupKey).notifier).addCard(widget.cardKey);
       } else {
@@ -248,7 +256,7 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
         .read(cardProvider(widget.cardKey).notifier)
         .updatePosition(details.offset);
 
-    var card = ref.watch(cardProvider(widget.cardKey));
+    final card = ref.watch(cardProvider(widget.cardKey));
     ref
         .read(nodeProvider(card.inputNode).notifier)
         .updatePosition(details.offset + const Offset(0, 100));
@@ -257,7 +265,7 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
         .updatePosition(details.offset + const Offset(200, 100));
   }
 
-  setChildByType(GlobalKey key) {
+  Widget setChildByType(GlobalKey key) {
     switch (ref.watch(cardTypeProvider(key))) {
       case CardType.simple:
         return const Column();
@@ -281,45 +289,58 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
         );
       default:
     }
+    return Container();
   }
 
-  Overlap getOverlapPercent(Offset cardTopLeft, Offset cardBottomRight,
-      Offset groupTopLeft, Offset groupBottomRight) {
+  Overlap getOverlapPercent(
+    Offset cardTopLeft,
+    Offset cardBottomRight,
+    Offset groupTopLeft,
+    Offset groupBottomRight,
+  ) {
     var xPer = 0.0;
     var yPer = 0.0;
 
-    int cardTopLeftDx = cardTopLeft.dx.toInt();
-    int cardBottomRightDx = cardBottomRight.dx.toInt();
-    int cardTopLeftDy = cardTopLeft.dy.toInt();
-    int cardBottomRightDy = cardBottomRight.dy.toInt();
-    int groupTopLeftDx = groupTopLeft.dx.toInt();
-    int groupBottomRightDx = groupBottomRight.dx.toInt();
-    int groupTopLeftDy = groupTopLeft.dy.toInt();
-    int groupBottomRightDy = groupBottomRight.dy.toInt();
+    final int cardTopLeftDx = cardTopLeft.dx.toInt();
+    final int cardBottomRightDx = cardBottomRight.dx.toInt();
+    final int cardTopLeftDy = cardTopLeft.dy.toInt();
+    final int cardBottomRightDy = cardBottomRight.dy.toInt();
+    final int groupTopLeftDx = groupTopLeft.dx.toInt();
+    final int groupBottomRightDx = groupBottomRight.dx.toInt();
+    final int groupTopLeftDy = groupTopLeft.dy.toInt();
+    final int groupBottomRightDy = groupBottomRight.dy.toInt();
 
-    var cardX = [for (int i = cardTopLeftDx; i < cardBottomRightDx + 1; i++) i];
-    var cardY = [for (int i = cardTopLeftDy; i < cardBottomRightDy + 1; i++) i];
-    var groupX = [
-      for (int i = groupTopLeftDx; i < groupBottomRightDx + 1; i++) i
+    final cardX = [
+      for (int i = cardTopLeftDx; i < cardBottomRightDx + 1; i++) i,
     ];
-    var groupY = [
-      for (int i = groupTopLeftDy; i < groupBottomRightDy + 1; i++) i
+    final cardY = [
+      for (int i = cardTopLeftDy; i < cardBottomRightDy + 1; i++) i,
+    ];
+    final groupX = [
+      for (int i = groupTopLeftDx; i < groupBottomRightDx + 1; i++) i,
+    ];
+    final groupY = [
+      for (int i = groupTopLeftDy; i < groupBottomRightDy + 1; i++) i,
     ];
 
-    var xList = [cardX, groupX];
-    var yList = [cardY, groupY];
+    final xList = [cardX, groupX];
+    final yList = [cardY, groupY];
 
-    var xOverlap = xList
+    final xOverlap = xList
         .fold(xList.first.toSet(), (a, b) => a.intersection(b.toSet()))
         .length;
-    var xTotal = min(cardBottomRightDx - cardTopLeftDx,
-            groupBottomRightDx - groupTopLeftDx) +
+    final xTotal = min(
+          cardBottomRightDx - cardTopLeftDx,
+          groupBottomRightDx - groupTopLeftDx,
+        ) +
         1;
-    var yOverlap = yList
+    final yOverlap = yList
         .fold(yList.first.toSet(), (a, b) => a.intersection(b.toSet()))
         .length;
-    var yTotal = min(cardBottomRightDy - cardTopLeftDy,
-            groupBottomRightDy - groupTopLeftDy) +
+    final yTotal = min(
+          cardBottomRightDy - cardTopLeftDy,
+          groupBottomRightDy - groupTopLeftDy,
+        ) +
         1;
 
     xPer = xOverlap / xTotal;

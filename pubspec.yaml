@@ -1,6 +1,6 @@
 name: dial_infinite_canvas
 description: "An infinite canvas package written in Dart"
-version: 0.10.10
+version: 0.10.11
 homepage:
 
 publish_to: none
@@ -27,6 +27,7 @@ dev_dependencies:
   riverpod_generator: ^2.3.9
   riverpod_lint: ^2.3.7
   build_runner: ^2.4.8
+  lint: ^2.3.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

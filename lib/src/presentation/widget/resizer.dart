@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:dial_infinite_canvas/src/enum.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dial_infinite_canvas/src/provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Resizer extends ConsumerStatefulWidget {
   const Resizer({
