@@ -1,6 +1,6 @@
 import 'dart:math';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:readmore/readmore.dart';
 import 'package:dial_infinite_canvas/src/enum.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dial_infinite_canvas/src/provider.dart';
@@ -106,6 +106,30 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
               ),
         ),
       ],
+
+      // simple card with title and content
+    );
+
+    var column2 = const Padding(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "data",
+            textAlign: TextAlign.left,
+            style: TextStyle(fontSize: 20),
+          ),
+          ReadMoreText(
+            'Flutter is Google’s mobile UI open source framework to build high-quality native (super fast) interfaces for iOS and Android apps with the unified codebase.',
+            trimMode: TrimMode.Line,
+            trimLines: 2,
+            trimCollapsedText: 'Show more',
+            trimExpandedText: 'Show less',
+          )
+        ],
+      ),
     );
 
     var sizedBox = Card(
@@ -121,7 +145,7 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
               .read(cardSelectedProvider(widget.cardKey).notifier)
               .update((state) => true);
         },
-        child: column1,
+        child: column2,
       ),
     );
     return Stack(
@@ -136,6 +160,7 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
               updateCardPosition(details);
               detectOverlapping(details);
             },
+            childWhenDragging: sizedBox,
             child: sizedBox,
           ),
         ),
