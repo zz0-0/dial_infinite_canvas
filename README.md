@@ -1,6 +1,6 @@
 # Dial_infinite_canvas
 
-This is an infinite canvas package written in Dart.
+This is an infinite canvas package written in Flutter/Dart.
 
 ## Tech Stack
 
