@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 @immutable
 class InfoCard extends Equatable {
@@ -19,13 +19,14 @@ class InfoCard extends Equatable {
   final GlobalKey inputNode;
   final GlobalKey outputNode;
 
-  InfoCard copyWith(
-      {GlobalKey? key,
-      Offset? position,
-      double? height,
-      double? width,
-      GlobalKey? inputNode,
-      GlobalKey? outputNode}) {
+  InfoCard copyWith({
+    GlobalKey? key,
+    Offset? position,
+    double? height,
+    double? width,
+    GlobalKey? inputNode,
+    GlobalKey? outputNode,
+  }) {
     return InfoCard(
       key: key ?? this.key,
       position: position ?? this.position,

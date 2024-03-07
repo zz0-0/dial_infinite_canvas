@@ -51,7 +51,7 @@ class _GroupWidgetState extends ConsumerState<GroupWidget> {
         .read(groupProvider(widget.groupKey).notifier)
         .updatePosition(details.offset);
     final cards = ref.watch(groupProvider(widget.groupKey)).cards;
-    for (var card in cards) {
+    for (final card in cards) {
       final position = ref.read(cardProvider(card)).position;
       ref.read(cardProvider(card).notifier).updatePosition(position + diff);
     }

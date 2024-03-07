@@ -17,15 +17,14 @@ class InteractiveCanvas extends ConsumerStatefulWidget {
 class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
   @override
   Widget build(BuildContext context) {
-    var canvasWidth = ref.watch(canvasWidthProvider);
-    var canvasHeight = ref.watch(canvasHeightProvider);
+    final canvasWidth = ref.watch(canvasWidthProvider);
+    final canvasHeight = ref.watch(canvasHeightProvider);
 
     return MouseRegion(
       onHover: updateMouseLocation,
       child: InteractiveViewer(
         transformationController: ref.watch(transformationControllerProvider),
-        boundaryMargin: const EdgeInsets.all(0),
-        clipBehavior: Clip.none,
+        clipBehavior: Clip.antiAlias,
         constrained: false,
         child: GestureDetector(
           behavior: HitTestBehavior.translucent,
@@ -70,7 +69,7 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
     );
   }
 
-  updateMouseLocation(PointerEvent details) {
+  void updateMouseLocation(PointerEvent details) {
     ref
         .read(mouseXProvider.notifier)
         .update((state) => state = details.position.dx);
@@ -100,7 +99,7 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
           ref
               .read(cardProvider(cardClone!.key).notifier)
               .updatePosition(cardClone!.position);
-          var card = ref.watch(cardProvider(cardClone!.key));
+          final card = ref.watch(cardProvider(cardClone!.key));
           ref
               .read(nodeProvider(card.inputNode).notifier)
               .updatePosition(cardClone!.position + const Offset(0, 100));
@@ -114,10 +113,10 @@ class _InteractiveCanvasState extends ConsumerState<InteractiveCanvas> {
   }
 
   void removeSelectedCardBorder() {
-    var cardLayout = ref.watch(cardLayoutProvider);
-    for (var layoutId in cardLayout) {
-      var key = layoutId.id;
-      var card = ref.watch(cardProvider(key as GlobalKey));
+    final cardLayout = ref.watch(cardLayoutProvider);
+    for (final layoutId in cardLayout) {
+      final key = layoutId.id;
+      final card = ref.watch(cardProvider(key as GlobalKey));
       if (ref.watch(cardSelectedProvider(card.key)) == true) {
         ref
             .watch(cardSelectedProvider(card.key).notifier)
@@ -139,14 +138,16 @@ class LayoutDelegate extends MultiChildLayoutDelegate {
   @override
   void performLayout(Size size) {
     // obtain all keys based on groupLayoutProvider
-    var groupLayout = ref.watch(groupLayoutProvider);
-    for (var layoutId in groupLayout) {
-      var key = layoutId.id;
-      var group = ref.watch(groupProvider(key as GlobalKey));
-      var position = group.position;
+    final groupLayout = ref.watch(groupLayoutProvider);
+    for (final layoutId in groupLayout) {
+      final key = layoutId.id;
+      final group = ref.watch(groupProvider(key as GlobalKey));
+      final position = group.position;
       if (hasChild(key)) {
         final Size currentSize = layoutChild(
-            key, BoxConstraints(maxWidth: size.width, maxHeight: size.height));
+          key,
+          BoxConstraints(maxWidth: size.width, maxHeight: size.height),
+        );
         if (position != Offset.infinite) {
           // the existing layout is based on the saved location,
           // mainly to deal with the situation after dragging and dropping
@@ -161,14 +162,16 @@ class LayoutDelegate extends MultiChildLayoutDelegate {
       }
     }
 
-    var cardLayout = ref.watch(cardLayoutProvider);
-    for (var layoutId in cardLayout) {
-      var key = layoutId.id;
-      var card = ref.watch(cardProvider(key as GlobalKey));
-      var position = card.position;
+    final cardLayout = ref.watch(cardLayoutProvider);
+    for (final layoutId in cardLayout) {
+      final key = layoutId.id;
+      final card = ref.watch(cardProvider(key as GlobalKey));
+      final position = card.position;
       if (hasChild(key)) {
         final Size currentSize = layoutChild(
-            key, BoxConstraints(maxWidth: size.width, maxHeight: size.height));
+          key,
+          BoxConstraints(maxWidth: size.width, maxHeight: size.height),
+        );
         if (position != Offset.infinite) {
           positionChild(key, position);
         } else {

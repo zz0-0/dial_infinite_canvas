@@ -1,6 +1,6 @@
 name: dial_infinite_canvas
 description: "An infinite canvas package written in Flutter/Dart"
-version: 0.10.11
+version: 0.10.12
 homepage:
 
 publish_to: none
@@ -10,24 +10,24 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
+  dial_minimap:
+    path: ../dial_minimap
   dotted_border: ^2.1.0
   equatable: ^2.0.5
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.4.9
-  riverpod_annotation: ^2.3.3
   readmore: ^2.1.0
-  dial_minimap:
-    path: ../dial_minimap
+  riverpod_annotation: ^2.3.3
 
 dev_dependencies:
+  build_runner: ^2.4.8
+  flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  lint: ^2.3.0
   riverpod_generator: ^2.3.9
   riverpod_lint: ^2.3.7
-  build_runner: ^2.4.8
-  lint: ^2.3.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

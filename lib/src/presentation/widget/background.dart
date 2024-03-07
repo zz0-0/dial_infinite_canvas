@@ -7,16 +7,16 @@ class Background extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var divisions = ref.watch(divisionsProvider);
-    var subdivisions = ref.watch(subdivisionsProvider);
+    final divisions = ref.watch(divisionsProvider);
+    final subdivisions = ref.watch(subdivisionsProvider);
 
     return GridPaper(
       divisions: divisions,
       subdivisions: subdivisions,
-      child: const SizedBox(
-        width: double.infinity,
-        height: double.infinity,
-      ),
+      child: const SizedBox.expand(
+          // width: double.infinity,
+          // height: double.infinity,
+          ),
     );
   }
 }

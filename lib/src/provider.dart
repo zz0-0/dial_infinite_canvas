@@ -43,12 +43,13 @@ final nodeProvider =
 // drag and drop
 final cardLayoutProvider =
     StateNotifierProvider<LayoutIdNotifier, List<LayoutId>>(
-        (ref) => LayoutIdNotifier());
+  (ref) => LayoutIdNotifier(),
+);
 final cardProvider =
     StateNotifierProvider.family<InfoCardNotifier, InfoCard, GlobalKey>(
         (ref, key) {
-  var key1 = GlobalKey();
-  var key2 = GlobalKey();
+  final key1 = GlobalKey();
+  final key2 = GlobalKey();
   return InfoCardNotifier(
     InfoCard(
       key: key,
@@ -63,7 +64,8 @@ final cardProvider =
 
 final groupLayoutProvider =
     StateNotifierProvider<LayoutIdNotifier, List<LayoutId>>(
-        (ref) => LayoutIdNotifier());
+  (ref) => LayoutIdNotifier(),
+);
 final groupProvider =
     StateNotifierProvider.family<GroupNotifier, Group, GlobalKey>((ref, key) {
   return GroupNotifier(
@@ -78,8 +80,8 @@ final groupProvider =
 // scale
 final scaleProvider = StateProvider((ref) => 1.0);
 final transformationControllerProvider = Provider((ref) {
-  var scale = ref.watch(scaleProvider);
-  TransformationController transformationController =
+  final scale = ref.watch(scaleProvider);
+  final TransformationController transformationController =
       TransformationController();
   transformationController.value.scale(scale);
   return transformationController;

@@ -33,17 +33,17 @@ class _EdgeWidgetState extends ConsumerState<EdgeWidget> {
   Future<void> executeAfterPaint() async {
     await Future.delayed(Duration.zero);
     // save new edge
-    var sourceCard = ref.watch(startKeyProvider);
-    var targetCard = ref.watch(endKeyProvider);
+    final sourceCard = ref.watch(startKeyProvider);
+    final targetCard = ref.watch(endKeyProvider);
 
     if (sourceCard != null && targetCard != null) {
       ref.watch(cardProvider(sourceCard));
       ref.watch(cardProvider(targetCard));
 
-      var sourceNode = ref.watch(cardProvider(sourceCard)).outputNode;
-      var targetNode = ref.watch(cardProvider(targetCard)).inputNode;
+      final sourceNode = ref.watch(cardProvider(sourceCard)).outputNode;
+      final targetNode = ref.watch(cardProvider(targetCard)).inputNode;
 
-      var connectedNodes = ref.watch(connectedNodeListProvider);
+      final connectedNodes = ref.watch(connectedNodeListProvider);
       connectedNodes.add(
         Edge(
           sourceCard: sourceCard,
@@ -53,8 +53,7 @@ class _EdgeWidgetState extends ConsumerState<EdgeWidget> {
         ),
       );
       ref.read(connectedNodeListProvider.notifier).update((state) {
-        state = connectedNodes;
-        return state;
+        return connectedNodes;
       });
 
       ref.read(startKeyProvider.notifier).update((state) => null);
@@ -73,26 +72,26 @@ class EdgePainter extends CustomPainter {
     paint.style = PaintingStyle.stroke;
     paint.strokeWidth = 10;
 
-    var node = ref.watch(connectedNodeListProvider);
-    var start = ref.watch(startKeyProvider);
-    var end = ref.watch(endKeyProvider);
-    var mouseX = ref.watch(mouseXProvider);
-    var mouseY = ref.watch(mouseYProvider);
+    final node = ref.watch(connectedNodeListProvider);
+    final start = ref.watch(startKeyProvider);
+    final end = ref.watch(endKeyProvider);
+    final mouseX = ref.watch(mouseXProvider);
+    final mouseY = ref.watch(mouseYProvider);
 
     // paint lines on existing nodes
     if (node.isNotEmpty) {
-      for (var n in node) {
-        var sourceNode = ref.watch(cardProvider(n.sourceCard)).outputNode;
-        var targetNode = ref.watch(cardProvider(n.targetCard)).inputNode;
-        var source = ref.watch(nodeProvider(sourceNode)).position;
-        var target = ref.watch(nodeProvider(targetNode)).position;
+      for (final n in node) {
+        final sourceNode = ref.watch(cardProvider(n.sourceCard)).outputNode;
+        final targetNode = ref.watch(cardProvider(n.targetCard)).inputNode;
+        final source = ref.watch(nodeProvider(sourceNode)).position;
+        final target = ref.watch(nodeProvider(targetNode)).position;
         if (source != Offset.infinite && target != Offset.infinite) {
           if (!drawArc) {
             p.moveTo(source.dx, source.dy);
             p.lineTo(target.dx, target.dy);
             p.close();
             canvas.drawPath(p, paint);
-            Rect rect = const Offset(0, 0) & Size(size.width, size.height);
+            final Rect rect = Offset.zero & Size(size.width, size.height);
             canvas.drawRect(rect, paint);
           }
         }
@@ -101,10 +100,10 @@ class EdgePainter extends CustomPainter {
 
     // add line drawing with starting and ending nodes
     if (start != null && end != null) {
-      var sourceNode = ref.watch(cardProvider(start)).outputNode;
-      var targetNode = ref.watch(cardProvider(end)).inputNode;
-      var source = ref.watch(nodeProvider(sourceNode)).position;
-      var target = ref.watch(nodeProvider(targetNode)).position;
+      final sourceNode = ref.watch(cardProvider(start)).outputNode;
+      final targetNode = ref.watch(cardProvider(end)).inputNode;
+      final source = ref.watch(nodeProvider(sourceNode)).position;
+      final target = ref.watch(nodeProvider(targetNode)).position;
       if (source != Offset.infinite && target != Offset.infinite) {
         // canvas.drawLine(source, target, paint);
         p.moveTo(source.dx, source.dy);
@@ -116,8 +115,8 @@ class EdgePainter extends CustomPainter {
 
     // add line drawing with only starting node
     if (start != null) {
-      var sourceNode = ref.watch(cardProvider(start)).outputNode;
-      var source = ref.watch(nodeProvider(sourceNode)).position;
+      final sourceNode = ref.watch(cardProvider(start)).outputNode;
+      final source = ref.watch(nodeProvider(sourceNode)).position;
       // canvas.drawLine(source, Offset(mouseX, mouseY), paint);
       p.moveTo(source.dx, source.dy);
       p.lineTo(mouseX, mouseY);

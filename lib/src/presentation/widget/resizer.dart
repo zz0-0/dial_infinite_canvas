@@ -20,9 +20,14 @@ class Resizer extends ConsumerStatefulWidget {
 }
 
 class _ResizerState extends ConsumerState<Resizer> {
-  double top = 0.0, left = 0.0, bottom = 0.0, right = 0.0;
-  late double width, height;
-  double initX = 0.0, initY = 0.0;
+  double top = 0.0;
+  double left = 0.0;
+  double bottom = 0.0;
+  double right = 0.0;
+  late double width;
+  late double height;
+  double initX = 0.0;
+  double initY = 0.0;
   bool isHovering = false;
 
   @override
@@ -31,11 +36,9 @@ class _ResizerState extends ConsumerState<Resizer> {
       case ResizeType.card:
         width = ref.watch(cardWidthProvider(widget.cardKey));
         height = ref.watch(cardHeightProvider(widget.cardKey));
-        break;
       case ResizeType.group:
         width = ref.watch(groupWidthProvider(widget.cardKey));
         height = ref.watch(groupHeightProvider(widget.cardKey));
-        break;
       default:
     }
 
@@ -130,7 +133,10 @@ class _ResizerState extends ConsumerState<Resizer> {
                 onPanStart: (details) =>
                     startDrag(details, ResizeDirection.bottomRight),
                 onPanUpdate: (details) => updateDrag(
-                    details, ResizeDirection.bottomRight, widget.type),
+                  details,
+                  ResizeDirection.bottomRight,
+                  widget.type,
+                ),
               ),
             ),
           ),
@@ -145,44 +151,42 @@ class _ResizerState extends ConsumerState<Resizer> {
   }
 
   void updateDrag(
-      DragUpdateDetails details, ResizeDirection direction, ResizeType type) {
+    DragUpdateDetails details,
+    ResizeDirection direction,
+    ResizeType type,
+  ) {
     late StateProvider<double> heightProvider;
     late StateProvider<double> widthProvider;
     switch (type) {
       case ResizeType.card:
         heightProvider = cardHeightProvider(widget.cardKey);
         widthProvider = cardWidthProvider(widget.cardKey);
-        break;
       case ResizeType.group:
         heightProvider = groupHeightProvider(widget.cardKey);
         widthProvider = groupWidthProvider(widget.cardKey);
-        break;
       default:
     }
 
     switch (direction) {
       case ResizeDirection.bottom:
-        var dy = details.globalPosition.dy - initY;
-        var newHeight = height + dy;
+        final dy = details.globalPosition.dy - initY;
+        final newHeight = height + dy;
         ref.read(heightProvider.notifier).update((state) => newHeight);
         initY = details.globalPosition.dy;
-        break;
       case ResizeDirection.right:
-        var dx = details.globalPosition.dx - initX;
-        var newWidth = width + dx;
+        final dx = details.globalPosition.dx - initX;
+        final newWidth = width + dx;
         ref.read(widthProvider.notifier).update((state) => newWidth);
         initX = details.globalPosition.dx;
-        break;
       case ResizeDirection.bottomRight:
-        var dx = details.globalPosition.dx - initX;
-        var dy = details.globalPosition.dy - initY;
-        var newWidth = width + dx;
-        var newHeight = height + dy;
+        final dx = details.globalPosition.dx - initX;
+        final dy = details.globalPosition.dy - initY;
+        final newWidth = width + dx;
+        final newHeight = height + dy;
         ref.read(heightProvider.notifier).update((state) => newHeight);
         ref.read(widthProvider.notifier).update((state) => newWidth);
         initX = details.globalPosition.dx;
         initY = details.globalPosition.dy;
-        break;
       default:
     }
   }

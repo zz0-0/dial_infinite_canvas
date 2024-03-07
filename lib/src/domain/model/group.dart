@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 @immutable
 class Group extends Equatable {
@@ -15,9 +15,10 @@ class Group extends Equatable {
 
   Group copyWith({GlobalKey? key, Offset? position, Set<GlobalKey>? cards}) {
     return Group(
-        key: key ?? this.key,
-        position: position ?? this.position,
-        cards: cards ?? this.cards);
+      key: key ?? this.key,
+      position: position ?? this.position,
+      cards: cards ?? this.cards,
+    );
   }
 
   @override

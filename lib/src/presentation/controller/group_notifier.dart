@@ -10,13 +10,13 @@ class GroupNotifier extends StateNotifier<Group> {
   }
 
   void addCard(GlobalKey key) {
-    Set<GlobalKey> newCards = Set.from(state.cards);
+    final Set<GlobalKey> newCards = Set.from(state.cards);
     newCards.add(key);
     state = state.copyWith(cards: newCards);
   }
 
   void removeCard(GlobalKey key) {
-    Set<GlobalKey> newCards = Set.from(state.cards);
+    final Set<GlobalKey> newCards = Set.from(state.cards);
     newCards.remove(key);
     state = state.copyWith(cards: newCards);
   }

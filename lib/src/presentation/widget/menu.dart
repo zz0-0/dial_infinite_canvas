@@ -54,33 +54,33 @@ class _MenuState extends ConsumerState<Menu> {
     );
   }
 
-  createInfoCardWidget(WidgetRef ref) {
-    GlobalKey key = GlobalKey();
-    var card = ref.watch(cardProvider(key));
-    var layoutId =
+  void createInfoCardWidget(WidgetRef ref) {
+    final GlobalKey key = GlobalKey();
+    final card = ref.watch(cardProvider(key));
+    final layoutId =
         ref.read(cardLayoutProvider.notifier).build(card.key, ResizeType.card);
     ref.read(cardLayoutProvider.notifier).addLayoutId(layoutId);
   }
 
-  createGroupWidget(WidgetRef ref) {
-    GlobalKey key = GlobalKey();
-    var group = ref.watch(groupProvider(key));
+  void createGroupWidget(WidgetRef ref) {
+    final GlobalKey key = GlobalKey();
+    final group = ref.watch(groupProvider(key));
 
-    var layoutId = ref
+    final layoutId = ref
         .read(groupLayoutProvider.notifier)
         .build(group.key, ResizeType.group);
     ref.read(groupLayoutProvider.notifier).addLayoutId(layoutId);
   }
 
-  resetCanvasZoomLevel() {
+  void resetCanvasZoomLevel() {
     ref.read(scaleProvider.notifier).update((state) => 1);
   }
 
-  zoomIn(WidgetRef ref) {
+  void zoomIn(WidgetRef ref) {
     ref.read(scaleProvider.notifier).update((state) => state + 0.1);
   }
 
-  zoomOut(WidgetRef ref) {
+  void zoomOut(WidgetRef ref) {
     ref.read(scaleProvider.notifier).update((state) => state - 0.1);
   }
 }
